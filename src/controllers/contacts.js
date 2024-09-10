@@ -44,7 +44,7 @@ export const getContactByIdController = async (req, res) => {
 
   res.json({
     status: 200,
-    message: `Successfully found contact with id ${contactId}!`,
+    message: `Contact with ${contactId} successfully find`,
     data,
   });
   //   } catch (error) {
@@ -92,7 +92,7 @@ export const patchContactController = async (req, res) => {
   );
 
   if (!result) {
-    throw createHttpError(404, `Contact with id=${contactId} not found`);
+    throw createHttpError(404, `Contact ${contactId} not found`);
   }
 
   res.json({
@@ -107,7 +107,7 @@ export const deleteContactController = async (req, res) => {
   const data = await contactServices.deleteContact({ _id: contactId });
 
   if (!data) {
-    throw createHttpError(404, `Movie with id=${contactId} not found`);
+    throw createHttpError(404, `Contact ${contactId} not found`);
   }
 
   res.status(204).send();
