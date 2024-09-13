@@ -14,13 +14,6 @@ import * as contactControllers from '../controllers/contacts.js'; /* корот�
 // } from '../controllers/contacts.js';
 
 import ctrlWrapper from '../utils/ctrlWrapper.js';
-import validateBody from '../utils/validateBody.js';
-import {
-  contactAddSchema,
-  contactPatchSchema,
-} from '../validation/contacts.js';
-
-import isValidId from '../middlewares/isValidId.js';
 
 const contactsRouter = Router();
 
@@ -31,42 +24,23 @@ contactsRouter.get(
 
 contactsRouter.get(
   '/:contactId',
-  isValidId,
   ctrlWrapper(contactControllers.getContactByIdController),
 );
 
-contactsRouter.post(
-  '/',
-  // async (req, res, next) => {
-  //   try {
-  //     await contactAddSchema.validateAsync(req.body);
-  //     next();
-  //   } catch (error) {
-  //     const ValidateError = createHttpError(400, error.message);
-  //     next(ValidateError);
-  //   }
-  // },ЗАСТОСОВУЄТЬСЯ ОБГОРТКА ДЛЯ ПЕРЕВІРКИ
-  validateBody(contactAddSchema),
-  ctrlWrapper(contactControllers.addContactController),
-);
+contactsRouter.post('/', ctrlWrapper(contactControllers.addContactController));
 
 contactsRouter.put(
   '/:contactId',
-  isValidId,
-  validateBody(contactAddSchema),
   ctrlWrapper(contactControllers.upsertContactController),
 );
 
 contactsRouter.patch(
   '/:contactId',
-  isValidId,
-  validateBody(contactPatchSchema),
   ctrlWrapper(contactControllers.patchContactController),
 );
 
 contactsRouter.delete(
   '/:contactId',
-  isValidId,
   ctrlWrapper(contactControllers.deleteContactController),
 );
 
