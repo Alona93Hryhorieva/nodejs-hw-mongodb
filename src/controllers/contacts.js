@@ -1,8 +1,14 @@
 import createHttpError from 'http-errors';
 import * as contactServices from '../services/contacts.js';
 import { contactAddSchema } from '../validation/contacts.js';
+import { query } from 'express';
+import parsePaginationParams from '../utils/parsePaginationParams.js';
 
 export const getAllContactsController = async (req, res) => {
+  const { perPage, page } = parsePaginationParams(req.query);
+  // console.log(perPage);
+  // console.log(page); ПРАВИЛЬНО ДІСТАТИ НАЛАШТУВАННЯ
+
   const data = await contactServices.getAllContacts();
   res.json({
     status: 200,
