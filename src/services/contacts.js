@@ -6,28 +6,12 @@ export const getContactById = (id) => ContactCollection.findById(id);
 
 export const createContact = (payload) => ContactCollection.create(payload);
 
-// export const updateContact = async (filter, data, options = {}) => {
-//   const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
-//     new: true,
-//     includeResultMetadata: true,
-//     ...options,
-//   });
-
-//   if (rawResult || rawResult.value) return null;
-
-//   return {
-//     data: rawResult.value,
-//     isNew: Boolean(rawResult.lastErrorObject?.upserted),
-//   };
-// };ВЕРСІЯ ВИКЛАДАЧА
 export const updateContact = async (filter, data, options = {}) => {
   const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
-    returnDocument: 'after', // замість new: true у новіших версіях MongoDB драйвера
     includeResultMetadata: true,
     ...options,
   });
 
-  // Перевірка, якщо немає результату
   if (!rawResult || !rawResult.value) return null;
 
   return {

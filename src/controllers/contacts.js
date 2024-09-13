@@ -1,69 +1,46 @@
 import createHttpError from 'http-errors';
 import * as contactServices from '../services/contacts.js';
-/*
-import {getContactById,getAllContacts} from './services/contacts.js'
-const contactServices = {
- getAllContacts,
- getContactById,
-}
-*/
+import { contactAddSchema } from '../validation/contacts.js';
 
-//ДО ЗАСТОСУВАННЯ CTRL ПРИБИРАЄМО TRYCATH, NEXT (next Я ЙОГО ВИДАЛЯЮ ПОВНІСТЮ , АЛЕ ВІН БУВ В КОДІ ДО ЦЬОГО в аргументі )
 export const getAllContactsController = async (req, res) => {
-  //   try {
   const data = await contactServices.getAllContacts();
-
   res.json({
     status: 200,
     message: 'Successfully found contacts',
     data,
   });
-  //   } catch (error) {
-  //      res.status(500).json({
-  //        message: error.message, ДО ЗАСТОСУВАННЯ ФУНКЦІЇ NEXT
-  //     });
-  //     next(error);
-  //   }
 };
 
-//ДО ЗАСТОСУВАННЯ CTRL ПРИБИРАЄМО TRYCATH, NEXT (next Я ЙОГО ВИДАЛЯЮ ПОВНІСТЮ , АЛЕ ВІН БУВ В КОДІ ДО ЦЬОГО в аргументі )
 export const getContactByIdController = async (req, res) => {
-  //   try {
   const { contactId } = req.params;
   const data = await contactServices.getContactById(contactId);
 
   if (!data) {
     throw createHttpError(404, `Contact with id=${contactId} not found`);
-    //   const error = new Error('Contact with id=${contactId} not found');ДО ЗАСТОСУВАННЯ createHttpError
-    //   error.status = 404;
-    //   throw error;
-    //   return res.status(404).json({
-    //     message: `Contact with id=${contactId} not found`,СКОРОЧЕННЯ ЗАПИСУ
-    //   });
   }
-
   res.json({
     status: 200,
     message: `Contact with ${contactId} successfully find`,
     data,
   });
-  //   } catch (error) {
-  //     const { status = 500, message } = error;  ДО ЗАСТОСУВАННЯ ФУНКЦІЇ NEXT
-  //      res.status(500).json({
-  //        message,
-  //     });
-  //     next(error);
-  //   }
 };
 
 export const addContactController = async (req, res) => {
-  const data = await contactServices.createContact(req.body);
-  // Встановлюємо статус 201 перед відправкою відповіді
-  res.status(201).json({
-    status: 201,
-    message: `Successfully created a contact!`,
-    data,
-  });
+  try {
+    await contactAddSchema.validateAsync(req.body, {
+      abortEarly: false,
+    });
+    console.log('Validation success');
+  } catch (error) {
+    console.log(error.message);
+  }
+  // const data = await contactServices.createContact(req.body);
+  //  Встановлюємо статус 201 перед відправкою відповіді
+  // res.status(201).json({
+  //   status: 201,
+  //   message: `Successfully created a contact!`,
+  //   data,
+  // });
 };
 
 export const upsertContactController = async (req, res) => {
@@ -73,9 +50,6 @@ export const upsertContactController = async (req, res) => {
     req.body,
     { upsert: true },
   );
-  // console.log(isNew);
-  // console.log(data);
-
   const status = isNew ? 201 : 200;
 
   res.status(status).json({
