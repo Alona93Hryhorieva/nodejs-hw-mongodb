@@ -8,7 +8,7 @@ const contactSchema = new Schema(
       type: String,
       required: true,
     },
-    phoneNumber: {
+    phoheNumber: {
       type: String,
       required: true,
     },
@@ -19,7 +19,7 @@ const contactSchema = new Schema(
     isFavorite: {
       type: Boolean,
       default: false,
-      // required: true,
+      required: true,
     },
     contactType: {
       type: String,
