@@ -1,6 +1,47 @@
 import ContactCollection from '../db/models/Contact.js';
 
-export const getAllContacts = () => ContactCollection.find();
+import calculatePaginationData from '../utils/calculatePaginationData.js';
+import { SORT_ORDER } from '../constants/index.js';
+
+export const getAllContacts = async ({
+  perPage,
+  page,
+  sortBy = '_id',
+  sortOrder = SORT_ORDER[0],
+  // filter = {},ФІЛЬТРАЦІЯ ПО РОКУ
+}) => {
+  const skip = (page - 1) * perPage;
+  const contactQuery =
+    ContactCollection.find(); /*ЗАПИТ ДО БАЗИ  ЩОБ ОТРИМАТИ РЕЗУЛЬТАТ resuelt = await  contactQuery;    */
+  // console.log(contactQuery);
+
+  // if (filter.minReleaseYear)  -поле і  умови фільтрації  ФІЛЬТРАЦІЯ ПО РОКУ{
+  //   contactQuery.where("releaseYear").gte(filter. minReleaseYear)
+  // } if (filter.maxReleaseYear) {
+  //   contactQuery.where("releaseYear").lte(filter.maxReleaseYear)
+  // }
+
+  const contacts = await contactQuery
+    .find()
+    .skip(skip)
+    .limit(perPage)
+    .sort({ [sortBy]: sortOrder });
+
+  const count = await contactQuery.countDocuments();
+  //  console.log(filter);ФІЛЬТРАЦІЯ ПО РОКУ
+
+  const paginationData = calculatePaginationData({ count, perPage, page });
+
+  return {
+    page,
+    perPage,
+    contacts,
+    totalItems: count,
+    // totalPages,
+    // hasNextPage,
+    ...paginationData,
+  };
+};
 
 export const getContactById = (id) => ContactCollection.findById(id);
 
