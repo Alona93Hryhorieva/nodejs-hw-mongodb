@@ -1,8 +1,9 @@
 const parseInteger = (value, defaultValue) => {
+  // console.log(value);
   if (typeof perPage !== 'string') return defaultValue;
 
   const parsedValue = parseInt(value);
-  if (Number.isNaN(parseInt(perPage))) return defaultValue;
+  if (Number.isNaN(parsedValue)) return defaultValue;
 
   return parsedValue;
 };
@@ -17,7 +18,6 @@ const parsePaginationParams = ({ perPage, page }) => {
   //   } else {
   //     parsedPerPage = parseInt(perPage);
   //   }
-
   const parsedPerPage = parseInteger(perPage, 10);
   const parsedPage = parseInteger(page, 1);
 

@@ -1,15 +1,27 @@
 import createHttpError from 'http-errors';
 import * as contactServices from '../services/contacts.js';
-import { contactAddSchema } from '../validation/contacts.js';
-import { query } from 'express';
+// import { contactAddSchema } from '../validation/contacts.js';
 import parsePaginationParams from '../utils/parsePaginationParams.js';
+import parseSortParams from '../utils/parseSortParams.js';
+import { sortFields } from '../db/models/Contact.js';
+// import parseContactFilterParams from '../utils/filters/parseContactFilterParams.js';ЯКЩО ДОДАТИ ФІЛЬТРАЦІЮ ПО РОКУ
 
 export const getAllContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(...req.query, sortFields);
+  // const filter = parseContactFilterParams(req.query);ФІЛЬТРАЦІЯ ПО РОКУ
+
   // console.log(perPage);
   // console.log(page); ПРАВИЛЬНО ДІСТАТИ НАЛАШТУВАННЯ
+  // console.log(req.query);ЕТАП СОРТУВАННЯ
 
-  const data = await contactServices.getAllContacts();
+  const data = await contactServices.getAllContacts({
+    perPage,
+    page,
+    sortBy,
+    sortOrder,
+    // filter,ФІЛЬТРАЦІЯ ПО РОКУ
+  });
   res.json({
     status: 200,
     message: 'Successfully found contacts',
