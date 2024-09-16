@@ -8,7 +8,11 @@ import { sortFields } from '../db/models/Contact.js';
 
 export const getAllContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
-  const { sortBy, sortOrder } = parseSortParams(...req.query, sortFields);
+  const { sortBy, sortOrder } = parseSortParams({
+    sortBy: req.query.sortBy,
+    sortFields,
+    sortOrder: req.query.sortOrder,
+  });
   // const filter = parseContactFilterParams(req.query);ФІЛЬТРАЦІЯ ПО РОКУ
 
   // console.log(perPage);
@@ -44,21 +48,13 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  try {
-    await contactAddSchema.validateAsync(req.body, {
-      abortEarly: false,
-    });
-    console.log('Validation success');
-  } catch (error) {
-    console.log(error.message);
-  }
-  // const data = await contactServices.createContact(req.body);
-  //  Встановлюємо статус 201 перед відправкою відповіді
-  // res.status(201).json({
-  //   status: 201,
-  //   message: `Successfully created a contact!`,
-  //   data,
-  // });
+  const data = await contactServices.createContact(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: `Successfully created a contact!`,
+    data,
+  });
 };
 
 export const upsertContactController = async (req, res) => {
