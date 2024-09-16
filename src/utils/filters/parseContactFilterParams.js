@@ -1,13 +1,19 @@
 // import parseInteger from './parseNumber.js';
 
-// const parseContactFilterParams = ({ minReleaseYear, maxReleaseYear }) => {
-//   const parsedMinReleaseYear = parseInteger(minReleaseYear);
-//   const parsedMaxReleaseYear = parseInteger(maxReleaseYear);
+const parseContactFilterParams = ({ type, isFavourite }) => {
+  const filter = {};
 
-//   return {
-//     minReleaseYear: parsedMinReleaseYear,
-//     maxReleaseYear: parsedMaxReleaseYear,
-//   };
-// };
+  // Додаємо до об'єкта фільтрації значення type, якщо воно є
+  if (type) {
+    filter.contactType = type;
+  }
 
-// export default parseContactFilterParams; ФІЛЬТРАЦІЯ ПО РОКУ
+  // Додаємо до об'єкта фільтрації значення isFavourite, якщо воно є
+  if (isFavourite !== undefined) {
+    filter.isFavourite = isFavourite === 'true'; // Перетворюємо значення на булеве
+  }
+
+  return filter;
+};
+
+export default parseContactFilterParams;

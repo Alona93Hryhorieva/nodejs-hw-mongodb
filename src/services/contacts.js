@@ -1,5 +1,5 @@
 import ContactCollection from '../db/models/Contact.js';
-
+import parseContactFilterParams from '../utils/filters/parseContactFilterParams.js';
 import calculatePaginationData from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
@@ -8,7 +8,7 @@ export const getAllContacts = async ({
   page,
   sortBy = '_id',
   sortOrder = SORT_ORDER[0],
-  // filter = {},ФІЛЬТРАЦІЯ ПО РОКУ
+  filter = {},
 }) => {
   const skip = (page - 1) * perPage;
 
@@ -16,21 +16,24 @@ export const getAllContacts = async ({
     ContactCollection.find(); /*ЗАПИТ ДО БАЗИ  ЩОБ ОТРИМАТИ РЕЗУЛЬТАТ resuelt = await  contactQuery;    */
   // console.log(contactQuery);
 
-  // if (filter.minReleaseYear)  -поле і  умови фільтрації  ФІЛЬТРАЦІЯ ПО РОКУ{
-  //   ContactCollection.find()where("releaseYear").gte(filter. minReleaseYear)
-  // } if (filter.maxReleaseYear) {
-  //   contactQuery.where("releaseYear").lte(filter.maxReleaseYear)
-  // }
+  if (filter.contactType) {
+    contactQuery.where('contactType').equals(filter.contactType);
+  }
 
+  if (filter.isFavourite !== undefined) {
+    contactQuery.where('isFavourite').equals(filter.isFavourite);
+  }
+
+  // Виконуємо запит до бази даних із застосуванням пагінації та сортування
   const contacts = await contactQuery
     .skip(skip)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
 
+  // Підраховуємо загальну кількість документів з урахуванням фільтрації
   const count = await ContactCollection.find()
     .merge(contactQuery)
     .countDocuments();
-  //  console.log(filter);ФІЛЬТРАЦІЯ ПО РОКУ
 
   const paginationData = calculatePaginationData({ count, perPage, page });
 

@@ -1,30 +1,29 @@
 import createHttpError from 'http-errors';
 import * as contactServices from '../services/contacts.js';
-// import { contactAddSchema } from '../validation/contacts.js';
 import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import { sortFields } from '../db/models/Contact.js';
-// import parseContactFilterParams from '../utils/filters/parseContactFilterParams.js';ЯКЩО ДОДАТИ ФІЛЬТРАЦІЮ ПО РОКУ
+import parseContactFilterParams from '../utils/filters/parseContactFilterParams.js';
 
 export const getAllContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
+  // console.log(perPage);
+  // console.log(page); ПРАВИЛЬНО ДІСТАТИ НАЛАШТУВАННЯ
+  // console.log(req.query);ЕТАП СОРТУВАННЯ
   const { sortBy, sortOrder } = parseSortParams({
     sortBy: req.query.sortBy,
     sortFields,
     sortOrder: req.query.sortOrder,
   });
-  // const filter = parseContactFilterParams(req.query);ФІЛЬТРАЦІЯ ПО РОКУ
 
-  // console.log(perPage);
-  // console.log(page); ПРАВИЛЬНО ДІСТАТИ НАЛАШТУВАННЯ
-  // console.log(req.query);ЕТАП СОРТУВАННЯ
+  const filter = parseContactFilterParams(req.query);
 
   const data = await contactServices.getAllContacts({
     perPage,
     page,
     sortBy,
     sortOrder,
-    // filter,ФІЛЬТРАЦІЯ ПО РОКУ
+    filter,
   });
   res.json({
     status: 200,

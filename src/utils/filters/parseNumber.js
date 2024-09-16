@@ -7,4 +7,4 @@
 //   return parsedNumber;
 // };
 
-// export default parseInteger; ФІЛЬТРАЦІЯ ПО РОКУ
+// export default parseInteger;Функція parseInteger корисна для перетворення параметрів з рядкових значень на числа.
