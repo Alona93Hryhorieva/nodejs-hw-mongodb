@@ -7,8 +7,8 @@ import parseContactFilterParams from '../utils/filters/parseContactFilterParams.
 
 export const getAllContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
-  // console.log(perPage);
-  // console.log(page); ПРАВИЛЬНО ДІСТАТИ НАЛАШТУВАННЯ
+  // console.log('Parsed perPage:', perPage); // Це має вивести значення perPage
+  // console.log('Parsed page:', page); // Це має вивести значення page
   // console.log(req.query);ЕТАП СОРТУВАННЯ
   const { sortBy, sortOrder } = parseSortParams({
     sortBy: req.query.sortBy,
@@ -28,7 +28,11 @@ export const getAllContactsController = async (req, res) => {
   res.json({
     status: 200,
     message: 'Successfully found contacts',
-    data,
+    data: {
+      page: data.page,
+      perPage: data.perPage,
+      data: data.contacts,
+    },
   });
 };
 
