@@ -1,6 +1,9 @@
 const parseInteger = (value, defaultValue) => {
-  // console.log(value);
-  if (typeof perPage !== 'string') return defaultValue;
+  // Логування для діагностики
+  // console.log('Parsing value:', value);
+
+  // Перевірка на тип value
+  if (typeof value !== 'string') return defaultValue;
 
   const parsedValue = parseInt(value);
   if (Number.isNaN(parsedValue)) return defaultValue;
@@ -9,6 +12,7 @@ const parseInteger = (value, defaultValue) => {
 };
 
 const parsePaginationParams = ({ perPage, page }) => {
+  // console.log('Raw query params:', { perPage, page }); // Логування вхідних значень
   //   let  = null;
   //   if (typeof perPage !== 'string') {
   //     parsedPerPage = 10;
@@ -20,6 +24,8 @@ const parsePaginationParams = ({ perPage, page }) => {
   //   }
   const parsedPerPage = parseInteger(perPage, 10);
   const parsedPage = parseInteger(page, 1);
+
+  // console.log('Parsed params:', { perPage: parsedPerPage, page: parsedPage }); // Логування результату
 
   return {
     perPage: parsedPerPage,
