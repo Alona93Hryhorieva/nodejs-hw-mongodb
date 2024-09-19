@@ -7,7 +7,6 @@ const calculatePaginationData = ({ count, perPage, page }) => {
     totalPages,
     hasNextPage,
     hasPreviousPage,
-    /*додаткові параметри ВІД СЕБЕ*/
     page,
     perPage,
     totalItems: count,
