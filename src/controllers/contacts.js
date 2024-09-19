@@ -29,9 +29,13 @@ export const getAllContactsController = async (req, res) => {
     status: 200,
     message: 'Successfully found contacts',
     data: {
+      data: data.contacts,
       page: data.page,
       perPage: data.perPage,
-      data: data.contacts,
+      totalItems: data.totalItems, // Додаємо загальну кількість елементів
+      totalPages: data.totalPages, // Додаємо загальну кількість сторінок
+      hasPreviousPage: data.hasPreviousPage, // Додаємо інформацію про попередню сторінку
+      hasNextPage: data.hasNextPage, // Додаємо інформацію про наступну сторінку
     },
   });
 };
