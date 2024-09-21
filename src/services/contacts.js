@@ -23,17 +23,16 @@ export const getAllContacts = async ({
   if (filter.isFavourite !== undefined) {
     contactQuery = contactQuery.where('isFavourite').equals(filter.isFavourite);
   }
+  // Підрахунок загальної кількості документів з урахуванням фільтрів, але без пагінації
+  const count = await ContactCollection.find()
+    .merge(contactQuery) // Застосовуємо фільтри
+    .countDocuments(); // Підраховуємо загальну кількість документів
 
   // Отримання контактів з пагінацією та сортуванням
   const contacts = await contactQuery
     .skip(skip)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
-
-  // Підрахунок загальної кількості документів з урахуванням фільтрів, але без пагінації
-  const count = await ContactCollection.find()
-    .merge(contactQuery) // Застосовуємо фільтри
-    .countDocuments(); // Підраховуємо загальну кількість документів
 
   // Розраховуємо дані для пагінації
   const paginationData = calculatePaginationData({ count, perPage, page });
