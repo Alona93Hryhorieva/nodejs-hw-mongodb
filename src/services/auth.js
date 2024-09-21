@@ -40,6 +40,10 @@ export const signin = async (payload) => {
     throw createHttpError(401, 'Email or password  invalid');
   }
 
+  await SessionCollection.deleteOne({
+    userId: user._id,
+  });
+
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 

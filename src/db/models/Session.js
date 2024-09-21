@@ -33,6 +33,6 @@ sessionSchema.pre('findOneAndUpdate', setUpdeteOptions);
 
 sessionSchema.post('findOneAndUpdate', handleSaveError);
 
-const SessionCollection = model('seion', sessionSchema);
+const SessionCollection = model('session', sessionSchema);
 
 export default SessionCollection;
