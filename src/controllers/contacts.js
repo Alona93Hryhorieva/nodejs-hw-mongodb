@@ -30,8 +30,8 @@ export const getAllContactsController = async (req, res) => {
     message: 'Successfully found contacts',
     data: {
       data: data.contacts,
-      page: data.page,
-      perPage: data.perPage,
+      page: data.page, //поточна сторінка
+      perPage: data.perPage, //кількість на сторінці
       totalItems: data.totalItems, // Додаємо загальну кількість елементів
       totalPages: data.totalPages, // Додаємо загальну кількість сторінок
       hasPreviousPage: data.hasPreviousPage, // Додаємо інформацію про попередню сторінку
