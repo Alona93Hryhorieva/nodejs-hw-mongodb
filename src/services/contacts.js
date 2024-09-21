@@ -11,40 +11,38 @@ export const getAllContacts = async ({
   filter = {},
 }) => {
   const skip = (page - 1) * perPage;
+  const limit = perPage;
 
-  const contactQuery =
-    ContactCollection.find(); /*ЗАПИТ ДО БАЗИ  ЩОБ ОТРИМАТИ РЕЗУЛЬТАТ resuelt = await  contactQuery;    */
-  // console.log(contactQuery);
+  let contactQuery = ContactCollection.find();
 
+  // Застосування фільтрів
   if (filter.contactType) {
-    contactQuery.where('contactType').equals(filter.contactType);
+    contactQuery = contactQuery.where('contactType').equals(filter.contactType);
   }
 
   if (filter.isFavourite !== undefined) {
-    contactQuery.where('isFavourite').equals(filter.isFavourite);
+    contactQuery = contactQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
-  // Виконуємо запит до бази даних із застосуванням пагінації та сортування
+  // Отримання контактів з пагінацією та сортуванням
   const contacts = await contactQuery
     .skip(skip)
     .limit(perPage)
     .sort({ [sortBy]: sortOrder });
 
-  // Підраховуємо загальну кількість документів з урахуванням фільтрації
+  // Підрахунок загальної кількості документів з урахуванням фільтрів, але без пагінації
   const count = await ContactCollection.find()
-    .merge(contactQuery)
-    .countDocuments();
+    .merge(contactQuery) // Застосовуємо фільтри
+    .countDocuments(); // Підраховуємо загальну кількість документів
 
+  // Розраховуємо дані для пагінації
   const paginationData = calculatePaginationData({ count, perPage, page });
 
   return {
-    contacts,
     page,
     perPage,
-    totalItems: count,
-    // totalPages,
-    // hasNextPage,
-    ...paginationData,
+    contacts,
+    ...paginationData, // Додаємо totalItems, totalPages, hasNextPage, hasPreviousPage
   };
 };
 
