@@ -27,4 +27,37 @@ authRouter.post(
   ctrlWrapper(authControllers.signinController),
 );
 
+// authRouter.post('/refresh', ctrlWrapper(authControllers.refreshController));
+
+// authRouter.post('/signout', ctrlWrapper(authControllers.signoutController));
 export default authRouter;
+
+/*жпт
+const express = require('express');
+const { register } = require('../controllers/auth');
+const router = express.Router();
+
+router.post('/register', register);
+
+module.exports = router;
+
+
+const express = require('express');
+const { loginController } = require('../controllers/auth');
+const router = express.Router();
+
+router.post('/login', loginController);
+
+module.exports = router;
+
+
+
+const express = require('express');
+const { register, login } = require('../controllers/auth');
+const router = express.Router();
+
+router.post('/register', register);
+router.post('/login', login); // Новий роут для логіну
+
+module.exports = router;
+*/

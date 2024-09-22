@@ -11,7 +11,7 @@ export const userSignupSchema = Joi.object({
     'any.required': 'Name is required',
   }),
   email: Joi.string().pattern(emailRegexp).min(3).max(20).required().messages({
-    'string.email': 'Email must be a valid email address',
+    'string.email': 'Please enter a valid email address',
   }),
   password: Joi.string().min(3).max(20).required().messages({
     'string.password': 'Password must be a valid',
@@ -26,3 +26,12 @@ export const userSigninSchema = Joi.object({
     'string.password': 'Password must be a valid',
   }),
 });
+
+// const Joi = require('joi'); жпт
+
+// const loginSchema = Joi.object({
+//   email: Joi.string().email().required(),
+//   password: Joi.string().min(6).required(),
+// });
+
+// module.exports = { loginSchema };

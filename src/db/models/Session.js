@@ -36,3 +36,27 @@ sessionSchema.post('findOneAndUpdate', handleSaveError);
 const SessionCollection = model('session', sessionSchema);
 
 export default SessionCollection;
+
+// const mongoose = require('mongoose');
+// const { Schema } = mongoose;
+
+// const sessionSchema = new Schema(
+//   {
+//     userId: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: 'User',
+//       required: true,
+//     },
+//     refreshToken: {
+//       type: String,
+//       required: true,
+//     },
+//   },
+//   {
+//     timestamps: true,
+//   },
+// );
+
+// const Session = mongoose.model('Session', sessionSchema);
+
+// module.exports = Session;

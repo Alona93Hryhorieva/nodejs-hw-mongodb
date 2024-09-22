@@ -18,24 +18,27 @@ export const getAllContactsController = async (req, res) => {
 
   const filter = parseContactFilterParams(req.query);
 
+  const { _id: userId } = req.user;
+
   const data = await contactServices.getAllContacts({
     perPage,
     page,
     sortBy,
     sortOrder,
-    filter,
+    filter: { ...filter, userId },
   });
   res.json({
     status: 200,
     message: 'Successfully found contacts',
     data: {
-      data: data.contacts,
-      page: data.page, //поточна сторінка
-      perPage: data.perPage, //кількість на сторінці
-      totalItems: data.totalItems, // Додаємо загальну кількість елементів
-      totalPages: data.totalPages, // Додаємо загальну кількість сторінок
-      hasPreviousPage: data.hasPreviousPage, // Додаємо інформацію про попередню сторінку
-      hasNextPage: data.hasNextPage, // Додаємо інформацію про наступну сторінку
+      contacts: data.contacts, // перейменували на contacts
+      userId, // Додаємо userId
+      page: data.page, // поточна сторінка
+      perPage: data.perPage, // кількість на сторінці
+      totalItems: data.totalItems, // загальна кількість елементів
+      totalPages: data.totalPages, // загальна кількість сторінок
+      hasPreviousPage: data.hasPreviousPage, // інформація про попередню сторінку
+      hasNextPage: data.hasNextPage, // інформація про наступну сторінку
     },
   });
 };
@@ -55,12 +58,17 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  const data = await contactServices.createContact(req.body);
+  const { _id: userId } = req.user;
+  // console.log(req.user);
+  const data = await contactServices.createContact(req.body, userId);
 
   res.status(201).json({
     status: 201,
     message: `Successfully created a contact!`,
-    data,
+    data: {
+      ...data._doc, // Беремо тільки дані з _doc
+      userId, // Додаємо userId до data
+    },
   });
 };
 

@@ -9,6 +9,7 @@ export const getAllContacts = async ({
   sortBy = '_id',
   sortOrder = SORT_ORDER[0],
   filter = {},
+  userId, // Додаємо userId до параметрів
 }) => {
   const skip = (page - 1) * perPage;
   const limit = perPage;
@@ -20,8 +21,8 @@ export const getAllContacts = async ({
     contactQuery = contactQuery.where('contactType').equals(filter.contactType);
   }
 
-  if (filter.isFavourite !== undefined) {
-    contactQuery = contactQuery.where('isFavourite').equals(filter.isFavourite);
+  if (filter.userId) {
+    contactQuery = contactQuery.where('userId').equals(filter.userId);
   }
   // Підрахунок загальної кількості документів з урахуванням фільтрів, але без пагінації
   const count = await ContactCollection.find()
@@ -40,7 +41,7 @@ export const getAllContacts = async ({
   return {
     page,
     perPage,
-    contacts,
+    contacts, // Важливо: повертаємо контакти
     ...paginationData, // Додаємо totalItems, totalPages, hasNextPage, hasPreviousPage
   };
 };
