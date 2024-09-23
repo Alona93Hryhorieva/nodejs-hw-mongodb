@@ -1,4 +1,15 @@
 import * as authServices from '../services/auth.js';
+// const setupSession = (res, session) => {
+//   res.cookie('refreshToken', session.refreshToken, {
+//     httpOnly: true,
+//     expire: new Date(Date.now() + session.refreshTokenValidUntil),
+//   });
+
+//   res.cookie('sessionId', session._id, {
+//     httpOnly: true,
+//     expire: new Date(Date.now() + session.refreshTokenValidUntil),
+//   });
+// };
 
 export const signupController = async (req, res) => {
   const newUser = await authServices.signup(req.body);
@@ -9,38 +20,6 @@ export const signupController = async (req, res) => {
     data: newUser,
   });
 };
-
-// export const signinController = async (req, res) => {
-//   try {
-//     const session = await authServices.signin(req.body);
-
-//     const refreshTokenExpiry = new Date(session.refreshTokenValidUntil);
-
-//     res.cookie('refreshToken', session.refreshToken, {
-//       httpOnly: true,
-//       expires: refreshTokenExpiry,
-//     });
-
-//     res.cookie('sessionId', session._id, {
-//       httpOnly: true,
-//       expires: refreshTokenExpiry,
-//     });
-
-//     res.json({
-//       status: 200,
-//       message: 'Successfully signed in',
-//       data: {
-//         accessToken: session.accessToken,
-//       },
-//       // refreshToken: session.refreshToken, // Uncomment if needed
-//     });
-//   } catch (error) {
-//     res.status(error.status || 500).json({
-//       status: error.status || 500,
-//       message: error.message || 'Internal Server Error',
-//     });
-//   }
-// };
 
 export const signinController = async (req, res) => {
   const session = await authServices.signin(req.body);
