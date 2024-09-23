@@ -7,16 +7,9 @@ import parseContactFilterParams from '../utils/filters/parseContactFilterParams.
 
 export const getAllContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
-  // console.log('Parsed perPage:', perPage); // Це має вивести значення perPage
-  // console.log('Parsed page:', page); // Це має вивести значення page
-  // console.log(req.query);ЕТАП СОРТУВАННЯ
 
   const { sortBy, sortOrder } = parseSortParams({ ...req.query, sortFields });
-  // const { sortBy, sortOrder } = parseSortParams({
-  //   sortBy: req.query.sortBy,
-  //   sortFields,
-  //   sortOrder: req.query.sortOrder,
-  // });
+
   const filter = parseContactFilterParams(req.query);
 
   const { _id: userId } = req.user;
@@ -33,16 +26,6 @@ export const getAllContactsController = async (req, res) => {
     status: 200,
     message: 'Successfully found contacts',
     data,
-    // data: {
-    //   contacts: data.contacts, // перейменували на contacts
-    //   userId, // Додаємо userId
-    //   page: data.page, // поточна сторінка
-    //   perPage: data.perPage, // кількість на сторінці
-    //   totalItems: data.totalItems, // загальна кількість елементів
-    //   totalPages: data.totalPages, // загальна кількість сторінок
-    //   hasPreviousPage: data.hasPreviousPage, // інформація про попередню сторінку
-    //   hasNextPage: data.hasNextPage, // інформація про наступну сторінку
-    // },
   });
 };
 
@@ -63,7 +46,6 @@ export const getContactByIdController = async (req, res) => {
 
 export const addContactController = async (req, res) => {
   const { _id: userId } = req.user;
-  // console.log(req.user);
   const data = await contactServices.createContact({ ...req.body, userId });
 
   res.status(201).json({

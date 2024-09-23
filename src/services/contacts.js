@@ -14,7 +14,6 @@ export const getAllContacts = async ({
 
   let contactQuery = ContactCollection.find();
 
-  // Застосування фільтрів
   if (filter.contactType) {
     contactQuery.where('contactType').equals(filter.contactType);
   }
@@ -26,18 +25,16 @@ export const getAllContacts = async ({
   if (filter.userId) {
     contactQuery.where('userId').equals(filter.userId);
   }
-  // Отримання контактів з пагінацією та сортуванням ПЕРЕМІСТИЛА МІСЦЯМИ
+  // ПЕРЕМІСТИЛА МІСЦЯМИ
   const contacts = await contactQuery
     .skip(skip)
     .limit(limit)
     .sort({ [sortBy]: sortOrder });
 
-  // Підрахунок загальної кількості документів з урахуванням фільтрів
   const count = await ContactCollection.find()
-    .merge(contactQuery) // Застосовуємо фільтри
-    .countDocuments(); // Підраховуємо загальну кількість документів
+    .merge(contactQuery)
+    .countDocuments();
 
-  // Розраховуємо дані для пагінації
   const paginationData = calculatePaginationData({ count, perPage, page });
 
   return {
