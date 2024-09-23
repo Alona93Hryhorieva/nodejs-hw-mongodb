@@ -10,6 +10,38 @@ export const signupController = async (req, res) => {
   });
 };
 
+// export const signinController = async (req, res) => {
+//   try {
+//     const session = await authServices.signin(req.body);
+
+//     const refreshTokenExpiry = new Date(session.refreshTokenValidUntil);
+
+//     res.cookie('refreshToken', session.refreshToken, {
+//       httpOnly: true,
+//       expires: refreshTokenExpiry,
+//     });
+
+//     res.cookie('sessionId', session._id, {
+//       httpOnly: true,
+//       expires: refreshTokenExpiry,
+//     });
+
+//     res.json({
+//       status: 200,
+//       message: 'Successfully signed in',
+//       data: {
+//         accessToken: session.accessToken,
+//       },
+//       // refreshToken: session.refreshToken, // Uncomment if needed
+//     });
+//   } catch (error) {
+//     res.status(error.status || 500).json({
+//       status: error.status || 500,
+//       message: error.message || 'Internal Server Error',
+//     });
+//   }
+// };
+
 export const signinController = async (req, res) => {
   const session = await authServices.signin(req.body);
 
@@ -23,7 +55,7 @@ export const signinController = async (req, res) => {
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    // expires: new Date(Date.now() + session.refreshTokenValidUntil),
+    expires: new Date(Date.now() + session.refreshTokenValidUntil),
     expires: refreshTokenExpiry,
   });
 
@@ -35,7 +67,7 @@ export const signinController = async (req, res) => {
     },
     // refreshToken: session.refreshToken,
   });
-};
+}; /*ВАРІАНТ ВИКЛАДАЧА*/
 
 // export const refreshController = async (req, res) => {
 //   const { refreshToken, sessionId } = req.cookies;
