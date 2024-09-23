@@ -22,24 +22,49 @@ import {
 //   };
 // };
 
+// export const signup = async (payload) => {
+//   const { email, password } = payload;
+
+//   const user = await UserCollection.findOne({ email });
+
+//   if (!user) {
+//     throw createHttpError(409, 'Email already exist');
+//   }
+
+//   const hasPassword = await bcrypt.hash(password, 10);
+//   const data = await UserCollection.create({
+//     ...payload,
+//     password: hasPassword,
+//   });
+//   //   console.log(data._doc);
+//   delete data._doc.password;
+
+//   return data._doc;
+// };
 export const signup = async (payload) => {
   const { email, password } = payload;
 
+  // Перевірка, чи існує користувач з таким email
   const user = await UserCollection.findOne({ email });
 
-  if (!user) {
-    throw createHttpError(409, 'Email already exist');
+  // Якщо користувач існує, викидаємо помилку
+  if (user) {
+    throw createHttpError(409, 'Email already exists');
   }
 
-  const hasPassword = await bcrypt.hash(password, 10);
+  // Хешуємо пароль
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Створюємо нового користувача
   const data = await UserCollection.create({
     ...payload,
-    password: hasPassword,
+    password: hashedPassword,
   });
-  //   console.log(data._doc);
-  delete data._doc.password;
 
-  return data._doc;
+  // Видаляємо пароль перед тим, як повертати дані
+  const { password: _, ...userData } = data._doc; // Видаляємо поле password з результату
+
+  return userData; // Повертаємо дані користувача без паролю
 };
 
 export const signin = async (payload) => {
