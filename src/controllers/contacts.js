@@ -11,13 +11,12 @@ export const getAllContactsController = async (req, res) => {
   // console.log('Parsed page:', page); // Це має вивести значення page
   // console.log(req.query);ЕТАП СОРТУВАННЯ
 
+  const { sortBy, sortOrder } = parseSortParams({ ...req.query, sortFields });
   // const { sortBy, sortOrder } = parseSortParams({
   //   sortBy: req.query.sortBy,
   //   sortFields,
   //   sortOrder: req.query.sortOrder,
   // });
-  const { sortBy, sortOrder } = parseSortParams({ ...req.query, sortFields });
-
   const filter = parseContactFilterParams(req.query);
 
   const { _id: userId } = req.user;

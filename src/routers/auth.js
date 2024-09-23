@@ -27,37 +27,23 @@ authRouter.post(
   ctrlWrapper(authControllers.signinController),
 );
 
-// authRouter.post('/refresh', ctrlWrapper(authControllers.refreshController));
+authRouter.post('/refresh', ctrlWrapper(authControllers.refreshController));
 
-// authRouter.post('/signout', ctrlWrapper(authControllers.signoutController));
+authRouter.post('/signout', ctrlWrapper(authControllers.signoutController));
 export default authRouter;
 
-/*жпт
-const express = require('express');
-const { register } = require('../controllers/auth');
-const router = express.Router();
+// authRouter.post(
+//   '/register',
+//   validateBody(userSignupSchema),
+//   ctrlWrapper(authControllers.signupController),
+// );
 
-router.post('/register', register);
+// authRouter.post(
+//   '/login',
+//   validateBody(userSigninSchema),
+//   ctrlWrapper(authControllers.signinController),
+// );
 
-module.exports = router;
+// authRouter.post('/refresh', ctrlWrapper(authControllers.refreshController));
 
-
-const express = require('express');
-const { loginController } = require('../controllers/auth');
-const router = express.Router();
-
-router.post('/login', loginController);
-
-module.exports = router;
-
-
-
-const express = require('express');
-const { register, login } = require('../controllers/auth');
-const router = express.Router();
-
-router.post('/register', register);
-router.post('/login', login); // Новий роут для логіну
-
-module.exports = router;
-*/
+// authRouter.post('/logout', ctrlWrapper(authControllers.logoutController));

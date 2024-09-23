@@ -44,11 +44,13 @@ export const getAllContacts = async ({
     page,
     perPage,
     contacts,
+    totalItems: count,
     ...paginationData,
   };
 };
 
-export const getContactById = (id) => ContactCollection.findById(id);
+// export const getContactById = (id) => ContactCollection.findById(id);
+export const getContact = (filter) => ContactCollection.findOne(filter);
 
 export const createContact = (payload) => ContactCollection.create(payload);
 
