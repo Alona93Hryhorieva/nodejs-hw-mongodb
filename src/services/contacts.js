@@ -1,5 +1,4 @@
 import ContactCollection from '../db/models/Contact.js';
-import parseContactFilterParams from '../utils/filters/parseContactFilterParams.js';
 import calculatePaginationData from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
@@ -11,10 +10,9 @@ export const getAllContacts = async ({
   filter = {},
 }) => {
   const skip = (page - 1) * perPage;
+  const limit = perPage;
 
-  const contactQuery =
-    ContactCollection.find(); /*ЗАПИТ ДО БАЗИ  ЩОБ ОТРИМАТИ РЕЗУЛЬТАТ resuelt = await  contactQuery;    */
-  // console.log(contactQuery);
+  let contactQuery = ContactCollection.find();
 
   if (filter.contactType) {
     contactQuery.where('contactType').equals(filter.contactType);
@@ -24,13 +22,15 @@ export const getAllContacts = async ({
     contactQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
-  // Виконуємо запит до бази даних із застосуванням пагінації та сортування
+  if (filter.userId) {
+    contactQuery.where('userId').equals(filter.userId);
+  }
+  // ПЕРЕМІСТИЛА МІСЦЯМИ
   const contacts = await contactQuery
     .skip(skip)
-    .limit(perPage)
+    .limit(limit)
     .sort({ [sortBy]: sortOrder });
 
-  // Підраховуємо загальну кількість документів з урахуванням фільтрації
   const count = await ContactCollection.find()
     .merge(contactQuery)
     .countDocuments();
@@ -38,17 +38,16 @@ export const getAllContacts = async ({
   const paginationData = calculatePaginationData({ count, perPage, page });
 
   return {
-    contacts,
     page,
     perPage,
+    contacts,
     totalItems: count,
-    // totalPages,
-    // hasNextPage,
     ...paginationData,
   };
 };
 
-export const getContactById = (id) => ContactCollection.findById(id);
+// export const getContactById = (id) => ContactCollection.findById(id);
+export const getContact = (filter) => ContactCollection.findOne(filter);
 
 export const createContact = (payload) => ContactCollection.create(payload);
 

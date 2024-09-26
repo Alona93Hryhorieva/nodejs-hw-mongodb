@@ -27,12 +27,13 @@ const sessionSchema = new Schema(
   },
   { versionKey: false, timestamps: true },
 );
+
 sessionSchema.post('save', handleSaveError);
 
 sessionSchema.pre('findOneAndUpdate', setUpdeteOptions);
 
 sessionSchema.post('findOneAndUpdate', handleSaveError);
 
-const SessionCollection = model('seion', sessionSchema);
+const SessionCollection = model('session', sessionSchema);
 
 export default SessionCollection;

@@ -17,15 +17,19 @@ const contactSchema = new Schema(
       type: String,
       required: false,
     },
-    isFavorite: {
+    isFavourite: {
       type: Boolean,
       default: false,
-      // required: true,
     },
     contactType: {
       type: String,
       enum: contactTypeList,
       default: 'personal',
+      required: true,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
       required: true,
     },
   },
@@ -44,7 +48,7 @@ export const sortFields = [
   'name',
   'phoneNumber',
   'email',
-  'isFavorite',
+  'isFavourite',
   'contactType',
   'createdAt',
   'updatedAt',
