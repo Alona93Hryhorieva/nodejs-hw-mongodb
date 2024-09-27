@@ -4,6 +4,9 @@ import * as authControllers from '../controllers/auth.js';
 import validateBody from '../utils/validateBody.js';
 import { userRegisterSchema, userLoginSchema } from '../validation/users.js';
 
+// import { requestResetEmailSchema } from '../validation/auth.js';
+// import { requestResetEmailController } from '../controllers/auth.js';
+
 const authRouter = Router();
 
 authRouter.post(
@@ -11,15 +14,7 @@ authRouter.post(
   validateBody(userRegisterSchema),
   ctrlWrapper(authControllers.registerController),
 );
-// authRouter.post(
-//   '/signup',
-//   (req, res, next) => {
-//     console.log('Signup route hit');
-//     next();
-//   },
-//   validateBody(userSignupSchema),
-//   ctrlWrapper(authControllers.signupController),
-// );
+
 authRouter.post(
   '/login',
   validateBody(userLoginSchema),
@@ -30,4 +25,9 @@ authRouter.post('/refresh', ctrlWrapper(authControllers.refreshController));
 
 authRouter.post('/logout', ctrlWrapper(authControllers.logoutController));
 
+// router.post(
+//   '/request-reset-email',
+//   validateBody(requestResetEmailSchema),
+//   ctrlWrapper(requestResetEmailController),
+// );
 export default authRouter;

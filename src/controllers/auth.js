@@ -1,27 +1,17 @@
 import * as authServices from '../services/auth.js';
-
-// const setupSession = (res, session) => {
-//   res.cookie('refreshToken', session.refreshToken, {
-//     httpOnly: true,
-//     expire: new Date(Date.now() + session.refreshTokenValidUntil),
-//   });
-//   res.cookie('sessionId', session._id, {
-//     httpOnly: true,
-//     expire: new Date(Date.now() + session.refreshTokenValidUntil),
-//   });
-// };
+// import { requestResetToken } from '../services/auth.js';
 
 const setupSession = (res, session) => {
   const refreshTokenExpiry = new Date(session.refreshTokenValidUntil); // Конвертуємо в дату
 
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: refreshTokenExpiry, // Використовуємо дату без змін
+    expires: refreshTokenExpiry,
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expires: refreshTokenExpiry, // Використовуємо дату без змін
+    expires: refreshTokenExpiry,
   });
 };
 
@@ -46,7 +36,6 @@ export const loginController = async (req, res) => {
     data: {
       accessToken: session.accessToken,
     },
-    // refreshToken: session.refreshToken,
   });
 };
 
@@ -79,6 +68,18 @@ export const logoutController = async (req, res) => {
 
   res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
-
   res.status(204).send();
 };
+
+// export const requestResetEmailSchema = Joi.object({
+//   email: Joi.string().email().required(),
+// });
+
+// export const requestResetEmailController = async (req, res) => {
+//   await requestResetToken(req.body.email);
+//   res.json({
+//     message: 'Reset password email was successfully sent!',
+//     status: 200,
+//     data: {},
+//   });
+// };

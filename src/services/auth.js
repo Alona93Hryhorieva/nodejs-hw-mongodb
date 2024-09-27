@@ -8,6 +8,16 @@ import {
   refreshTokenLifetime,
 } from '../constants/users.js';
 
+// import jwt from 'jsonwebtoken';
+
+// import { SMTP } from '../constants/index.js';
+// import { env } from '../utils/env.js';
+import { sendEmail } from '../utils/sendMail.js';
+
+// import handlebars from 'handlebars';
+// import path from 'node:path';
+// import fs from 'node:fs/promises';
+
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
@@ -37,27 +47,16 @@ export const register = async (payload) => {
   });
   delete data._doc.password;
 
+  const verifyEmail = {
+    to: email,
+    subject: 'Verify email',
+    html: `<a target="_blank" href="http://localhost:3000/auth/verify?token=">Click verify email</a>`,
+  };
+
+  await sendEmail(verifyEmail);
+
   return data._doc;
 };
-// export const signup = async (payload) => {
-//   const { email, password } = payload;
-//   Перевірка, чи існує користувач з таким email
-//   const user = await UserCollection.findOne({ email });
-//    Якщо користувач існує, викидаємо помилку
-//   if (user) {
-//     throw createHttpError(409, 'Email already exists');
-//   }
-//    Хешуємо пароль
-//   const hashedPassword = await bcrypt.hash(password, 10);
-//   Створюємо нового користувача
-//   const data = await UserCollection.create({
-//     ...payload,
-//     password: hashedPassword,
-//   });
-//   Видаляємо пароль перед тим, як повертати дані
-//   const { password: _, ...userData } = data._doc; // Видаляємо поле password з результату
-//   return userData; // Повертаємо дані користувача без паролю
-// };
 
 export const login = async (payload) => {
   const { email, password } = payload;
@@ -66,6 +65,11 @@ export const login = async (payload) => {
   if (!user) {
     throw createHttpError(401, 'Email or password  invalid');
   }
+
+  if (!user.verify) {
+    throw createHttpError(401, 'Email not verify');
+  }
+
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
     throw createHttpError(401, 'Email or password  invalid');
@@ -79,10 +83,6 @@ export const login = async (payload) => {
 
   const userSession = await SessionCollection.create({
     userId: user._id,
-    // accessToken,
-    // refreshToken,
-    // accessTokenValidUntil,
-    // refreshTokenValidUntil,
     ...sessionData,
   });
 
@@ -123,3 +123,42 @@ export const logout = async (sessionId) => {
 };
 
 export const findUser = (filter) => UserCollection.findOne(filter);
+
+// export const requestResetToken = async (email) => {
+//   const user = await UsersCollection.findOne({ email });
+//   if (!user) {
+//     throw createHttpError(404, 'User not found');
+//   }
+//   const resetToken = jwt.sign(
+//     {
+//       sub: user._id,
+//       email,
+//     },
+//     env('JWT_SECRET'),
+//     {
+//       expiresIn: '15m',
+//     },
+//   );
+
+//   const resetPasswordTemplatePath = path.join(
+//     TEMPLATES_DIR,
+//     'reset-password-email.html',
+//   );
+
+//   const templateSource = (
+//     await fs.readFile(resetPasswordTemplatePath)
+//   ).toString();
+
+//   const template = handlebars.compile(templateSource);
+//   const html = template({
+//     name: user.name,
+//     link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
+//   });
+
+//   await sendEmail({
+//     from: env(SMTP.SMTP_FROM),
+//     to: email,
+//     subject: 'Reset your password',
+//     html,
+//   });
+// };
