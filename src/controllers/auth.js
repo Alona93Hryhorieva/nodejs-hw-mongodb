@@ -25,6 +25,17 @@ export const registerController = async (req, res) => {
   });
 };
 
+// export const verifyController = async (req, res) => {
+//   const { token } = req.query;
+//   await authServices.verify(token);
+
+//   res.json({
+//     status: 200,
+//     message: 'Email verified successfully',
+//     data: {},
+//   });
+// };
+
 export const loginController = async (req, res) => {
   const session = await authServices.login(req.body);
 
@@ -71,15 +82,20 @@ export const logoutController = async (req, res) => {
   res.status(204).send();
 };
 
-// export const requestResetEmailSchema = Joi.object({
-//   email: Joi.string().email().required(),
-// });
+export const requestResetEmailController = async (req, res) => {
+  await authServices.requestResetToken(req.body.email);
+  res.json({
+    status: 200,
+    message: 'Reset password email has been successfully sent.',
+    data: {},
+  });
+};
 
-// export const requestResetEmailController = async (req, res) => {
-//   await requestResetToken(req.body.email);
-//   res.json({
-//     message: 'Reset password email was successfully sent!',
-//     status: 200,
-//     data: {},
-//   });
-// };
+export const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+  res.json({
+    status: 200,
+    message: 'Password was successfully reset!',
+    data: {},
+  });
+};
