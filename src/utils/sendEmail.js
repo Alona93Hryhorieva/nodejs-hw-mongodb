@@ -25,20 +25,35 @@ console.log('SMTP_PASSWORD:', process.env.SMTP_PASSWORD);
 // export const sendEmail = async (options) => {
 //   return await transporter.sendMail(options);
 // };
+const sendTestEmail = async () => {
+  try {
+    const info = await transporter.sendMail({
+      from: env(SMTP.SMTP_FROM),
+      to: 'test@example.com', // Замініть на свій тестовий email
+      subject: 'Test Email',
+      text: 'This is a test email.',
+    });
+    console.log('Test email sent:', info.response);
+  } catch (error) {
+    console.error('Error sending test email:', error);
+  }
+};
+
+sendTestEmail();
+
 export const sendEmail = async (options) => {
   try {
     const info = await transporter.sendMail(options);
     console.log('Email sent:', info.response);
     return info;
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending email:', error); // Виводимо деталі помилки
     throw createHttpError(
       500,
       'Failed to send the email, please try again later.',
     );
   }
 };
-
 export default sendEmail;
 
 // ВАРІАНТ ВИКЛАДАЧА З ВЕРИФІКАЦІЄЮ
