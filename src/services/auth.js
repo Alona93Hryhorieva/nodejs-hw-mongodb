@@ -13,7 +13,7 @@ import {
   refreshTokenLifetime,
 } from '../constants/users.js';
 import { SMTP } from '../constants/index.js';
-import { createJwtToken, verifyToken } from '../utils/jwt.js';
+import { createJwtToken } from '../utils/jwt.js';
 import { env } from '../utils/env.js';
 import sendEmail from '../utils/sendEmail.js';
 import { TEMPLATES_DIR } from '../constants/index.js';
@@ -102,9 +102,9 @@ export const login = async (payload) => {
     throw createHttpError(401, 'Email or password  invalid');
   }
 
-  if (!user.verify) {
-    throw createHttpError(401, 'Email not verify');
-  }
+  // if (!user.verify) {
+  //   throw createHttpError(401, 'Email not verify');
+  // }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
