@@ -1,23 +1,22 @@
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { randomBytes } from 'crypto';
+import handlebars from 'handlebars';
+import * as path from 'node:path';
+import * as fs from 'node:fs/promises';
+import jwt from 'jsonwebtoken';
+
 import UserCollection from '../db/models/User.js';
 import SessionCollection from '../db/models/Session.js';
 import {
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/users.js';
-
-import jwt from 'jsonwebtoken';
+import { SMTP } from '../constants/index.js';
 import { createJwtToken, verifyToken } from '../utils/jwt.js';
-
-// import {TEMPLATES_DIR } from '../constants/index.js';
 import { env } from '../utils/env.js';
-// import sendEmail from '../utils/sendEmail.js'; для відправлення листа з варіфікацією
-
-// import handlebars from 'handlebars';
-// import *as path from 'node:path'; ШЛЯХ
-// import *as fs from 'node:fs/promises'; ПРОЧИТАТИ ФАЙЛ
+import sendEmail from '../utils/sendEmail.js';
+import { TEMPLATES_DIR } from '../constants/index.js';
 
 // const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');шлях до шаблону
 
@@ -161,41 +160,57 @@ export const logout = async (sessionId) => {
 
 export const findUser = (filter) => UserCollection.findOne(filter);
 
-// export const requestResetToken = async (email) => {
-//   const user = await UsersCollection.findOne({ email });
-//   if (!user) {
-//     throw createHttpError(404, 'User not found');
-//   }
-//   const resetToken = jwt.sign(
-//     {
-//       sub: user._id,
-//       email,
-//     },
-//     env('JWT_SECRET'),
-//     {
-//       expiresIn: '15m',
-//     },
-//   );
+export const requestResetToken = async (email) => {
+  const user = await UserCollection.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+  // Створюємо JWT токен
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    env('JWT_SECRET'),
+    { expiresIn: '5m' },
+  );
 
-//   const resetPasswordTemplatePath = path.join(
-//     TEMPLATES_DIR,
-//     'reset-password-email.html',
-//   );
+  // Читання шаблону
+  const resetPasswordTemplatePath = path.join(
+    TEMPLATES_DIR,
+    'reset-password-email.html',
+  );
+  const templateSource = (
+    await fs.readFile(resetPasswordTemplatePath)
+  ).toString();
+  const template = handlebars.compile(templateSource);
 
-//   const templateSource = (
-//     await fs.readFile(resetPasswordTemplatePath)
-//   ).toString();
+  // Створення HTML контенту листа
+  const html = template({
+    name: user.name,
+    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`, // Формуємо посилання
+  });
 
-//   const template = handlebars.compile(templateSource);
-//   const html = template({
-//     name: user.name,
-//     link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
-//   });
+  // Відправка листа
+  // await sendEmail({
+  //   from: env(SMTP.SMTP_FROM),
+  //   to: email,
+  //   subject: 'Reset your password',
+  //   html,
+  // });КОНСПЕКТ
 
-//   await sendEmail({
-//     from: env(SMTP.SMTP_FROM),
-//     to: email,
-//     subject: 'Reset your password',
-//     html,
-//   });
-// };
+  try {
+    await sendEmail({
+      from: env(SMTP.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch (error) {
+    console.error('Email sending error:', error);
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+};

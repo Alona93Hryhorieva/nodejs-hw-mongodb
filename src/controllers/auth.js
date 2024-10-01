@@ -1,5 +1,6 @@
 import * as authServices from '../services/auth.js';
-// import { requestResetToken } from '../services/auth.js';
+
+import { requestResetToken } from '../services/auth.js';
 
 const setupSession = (res, session) => {
   const refreshTokenExpiry = new Date(session.refreshTokenValidUntil); // Конвертуємо в дату
@@ -82,20 +83,37 @@ export const logoutController = async (req, res) => {
   res.status(204).send();
 };
 
+// export const requestResetEmailController = async (req, res) => {
+//   await requestResetToken(req.body.email);
+//   res.json({
+//     message: 'Reset password email was successfully sent!',
+//     status: 200,
+//     data: {},
+//   });
+// }; ВАРІАНТ КОНСПЕКТА
 export const requestResetEmailController = async (req, res) => {
-  await authServices.requestResetToken(req.body.email);
-  res.json({
-    status: 200,
-    message: 'Reset password email has been successfully sent.',
-    data: {},
-  });
+  try {
+    await requestResetToken(req.body.email);
+    res.json({
+      message: 'Reset password email has been successfully sent.',
+      status: 200,
+      data: {},
+    });
+  } catch (error) {
+    console.error('Error in requestResetEmailController:', error);
+    res.status(error.status || 500).json({
+      message: error.message,
+      status: error.status || 500,
+      data: {},
+    });
+  }
 };
 
-export const resetPasswordController = async (req, res) => {
-  await resetPassword(req.body);
-  res.json({
-    status: 200,
-    message: 'Password was successfully reset!',
-    data: {},
-  });
-};
+// export const resetPasswordController = async (req, res) => {
+//   await authServices.resetPassword(req.body);
+//   res.json({
+//     status: 200,
+//     message: 'Password was successfully reset!',
+//     data: {},
+//   });
+// };
