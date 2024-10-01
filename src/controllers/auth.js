@@ -3,6 +3,7 @@ import * as authServices from '../services/auth.js';
 import { requestResetToken } from '../services/auth.js';
 
 import { resetPassword } from '../services/auth.js';
+import { validateBody } from '../middlewares/validateBody.js';
 
 const setupSession = (res, session) => {
   const refreshTokenExpiry = new Date(session.refreshTokenValidUntil); // Конвертуємо в дату
@@ -93,21 +94,27 @@ export const logoutController = async (req, res) => {
 //     data: {},
 //   });
 // }; ВАРІАНТ КОНСПЕКТА
-export const requestResetEmailController = async (req, res) => {
+export const sendResetEmailController = async (req, res, next) => {
   try {
-    await requestResetToken(req.body.email);
-    res.json({
-      message: 'Reset password email has been successfully sent.',
+    const { email } = req.body;
+
+    // Валідація тіла запиту
+    const validationError = validateBody(req.body);
+    if (validationError) {
+      return next(validationError);
+    }
+
+    // Викликаємо функцію для генерації токена та надсилання листа
+    await requestResetToken(email);
+
+    // Відповідь у разі успіху
+    res.status(200).json({
       status: 200,
+      message: 'Reset password email has been successfully sent.',
       data: {},
     });
   } catch (error) {
-    console.error('Error in requestResetEmailController:', error);
-    res.status(error.status || 500).json({
-      message: error.message,
-      status: error.status || 500,
-      data: {},
-    });
+    next(error); // Передаємо помилку далі
   }
 };
 

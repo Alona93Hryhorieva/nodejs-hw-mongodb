@@ -172,7 +172,7 @@ export const requestResetToken = async (email) => {
       email,
     },
     env('JWT_SECRET'),
-    { expiresIn: '5m' },
+    { expiresIn: '15m' },
   );
 
   // Читання шаблону
@@ -183,7 +183,7 @@ export const requestResetToken = async (email) => {
   const templateSource = (
     await fs.readFile(resetPasswordTemplatePath)
   ).toString();
-  const template = handlebars.compile(templateSource);
+  const template = handlebars.compile(templateSource.toString());
 
   // Створення HTML контенту листа
   const html = template({
@@ -225,7 +225,7 @@ export const resetPassword = async (payload) => {
     throw err;
   }
 
-  const user = await UsersCollection.findOne({
+  const user = await UserCollection.findOne({
     email: entries.email,
     _id: entries.sub,
   });
@@ -236,7 +236,7 @@ export const resetPassword = async (payload) => {
 
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
-  await UsersCollection.updateOne(
+  await UserCollection.updateOne(
     { _id: user._id },
     { password: encryptedPassword },
   );

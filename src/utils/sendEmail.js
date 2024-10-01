@@ -17,29 +17,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-console.log('SMTP_HOST:', process.env.SMTP_HOST);
-console.log('SMTP_PORT:', process.env.SMTP_PORT);
-console.log('SMTP_USER:', process.env.SMTP_USER);
-console.log('SMTP_PASSWORD:', process.env.SMTP_PASSWORD);
-
 // export const sendEmail = async (options) => {
 //   return await transporter.sendMail(options);
 // };
-const sendTestEmail = async () => {
-  try {
-    const info = await transporter.sendMail({
-      from: env(SMTP.SMTP_FROM),
-      to: 'test@example.com', // Замініть на свій тестовий email
-      subject: 'Test Email',
-      text: 'This is a test email.',
-    });
-    console.log('Test email sent:', info.response);
-  } catch (error) {
-    console.error('Error sending test email:', error);
-  }
-};
-
-sendTestEmail();
 
 export const sendEmail = async (options) => {
   try {
