@@ -2,6 +2,8 @@ import * as authServices from '../services/auth.js';
 
 import { requestResetToken } from '../services/auth.js';
 
+import { resetPassword } from '../services/auth.js';
+
 const setupSession = (res, session) => {
   const refreshTokenExpiry = new Date(session.refreshTokenValidUntil); // Конвертуємо в дату
 
@@ -109,11 +111,11 @@ export const requestResetEmailController = async (req, res) => {
   }
 };
 
-// export const resetPasswordController = async (req, res) => {
-//   await authServices.resetPassword(req.body);
-//   res.json({
-//     status: 200,
-//     message: 'Password was successfully reset!',
-//     data: {},
-//   });
-// };
+export const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+  res.json({
+    message: 'Password was successfully reset!',
+    status: 200,
+    data: {},
+  });
+};
