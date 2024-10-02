@@ -54,29 +54,8 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
-  console.log(req.body);
-  console.log(req.file);
-
-  //  let photo;
-  //  if (req.file) {
-  //    if (enableCloudinary === 'true') {
-  //      photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
-  //    } else {
-  //      photo = await saveFileToUploadDir(req.file);
-  //    }
-  //  }
-
-  // const { _id: userId } = req.user;
-  // const data = await contactServices.createContact({ ...req.body, userId,photo  });
-
-  // res.status(201).json({
-  //   status: 201,
-  //   message: `Successfully created a contact!`,
-  //   data,
-  // });
-};
-
-export const upsertContactController = async (req, res) => {
+  // console.log(req.body);
+  // console.log(req.file);
   let photo;
   if (req.file) {
     if (enableCloudinary === 'true') {
@@ -86,6 +65,21 @@ export const upsertContactController = async (req, res) => {
     }
   }
 
+  const { _id: userId } = req.user;
+  const data = await contactServices.createContact({
+    ...req.body,
+    userId,
+    photo,
+  });
+
+  res.status(201).json({
+    status: 201,
+    message: `Successfully created a contact!`,
+    data,
+  });
+};
+
+export const upsertContactController = async (req, res) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
 
@@ -105,6 +99,15 @@ export const upsertContactController = async (req, res) => {
 };
 
 export const patchContactController = async (req, res) => {
+  let photo;
+  if (req.file) {
+    if (enableCloudinary === 'true') {
+      photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+  }
+
   const { contactId } = req.params;
   const { _id: userId } = req.user;
 
@@ -113,15 +116,10 @@ export const patchContactController = async (req, res) => {
     ...(req.file && { photo: req.file.path }), // Додаємо шлях до завантаженого фото, якщо воно є
   };
 
-  // const result = await contactServices.updateContact(
-  //   { _id: contactId, userId },
-  //   req.body,
-  //   { new: true },
-  // ); викладач
   const result = await contactServices.updateContact(
-    { _id: contactId, userId }, // Умови пошуку (ID контакту та користувача)
-    updatedData, // Дані для оновлення
-    { new: true }, // Повернути оновлений документ
+    { _id: contactId, userId },
+    req.body,
+    { new: true },
   );
 
   if (!result) {

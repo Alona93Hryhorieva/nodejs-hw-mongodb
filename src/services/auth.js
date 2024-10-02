@@ -13,7 +13,7 @@ import {
   refreshTokenLifetime,
 } from '../constants/users.js';
 import { SMTP } from '../constants/index.js';
-import { createJwtToken } from '../utils/jwt.js';
+// import { createJwtToken } from '../utils/jwt.js';
 import { env } from '../utils/env.js';
 import sendEmail from '../utils/sendEmail.js';
 import { TEMPLATES_DIR } from '../constants/index.js';
@@ -44,7 +44,9 @@ const appDomain = env('APP_DOMAIN'); //адреса бекенду
 
 export const register = async (payload) => {
   const { email, password } = payload;
+
   const user = await UserCollection.findOne({ email });
+
   if (user) {
     throw createHttpError(409, 'Email in use');
   }
@@ -58,24 +60,21 @@ export const register = async (payload) => {
 
   delete data._doc.password; // Видаляємо пароль з відповіді
 
-  const jwtToken = createJwtToken({ email });
-
+  // const jwtToken = createJwtToken({ email });
   // const template = handlebars.compile(verifyEmailTemplateSource);
   // const html = template({
   //   appDomain,
   //   jwtToken,
   // });СТВОРЕННЯ ШАБЛОНУ
-
   //  Логіка відправлення листа
   // const verifyEmail = {
   //   to: email,
   //   subject: 'Verify email',
   //   html: `<a target="_blank" href="${appDomain}/auth/verify?token=${jwtToken}">Click verify email</a>`,
   // };
-
   // await sendEmail(verifyEmail);
 
-  return data._doc;
+  return data;
 };
 
 // export const verify = async (token) => {
@@ -107,6 +106,7 @@ export const login = async (payload) => {
   // }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
+
   if (!passwordCompare) {
     throw createHttpError(401, 'Email or password  invalid');
   }
@@ -192,42 +192,21 @@ export const requestResetToken = async (email) => {
   });
 
   // Відправка листа
-  // await sendEmail({
-  //   from: env(SMTP.SMTP_FROM),
-  //   to: email,
-  //   subject: 'Reset your password',
-  //   html,
-  // });КОНСПЕКТ
-
-  try {
-    await sendEmail({
-      from: env(SMTP.SMTP_FROM),
-      to: email,
-      subject: 'Reset your password',
-      html,
-    });
-  } catch (error) {
-    console.error('Email sending error  11   22  333 :', error);
-    throw createHttpError(
-      500,
-      'Failed to send the email, please try again later.',
-    );
-  }
+  await sendEmail({
+    from: env(SMTP.SMTP_FROM),
+    to: email,
+    subject: 'Reset your password',
+    html,
+  });
 };
 
 export const resetPassword = async (payload) => {
-  let entries;
+  // const entries = verifyToken(payload.token);
 
-  try {
-    entries = jwt.verify(payload.token, env('JWT_SECRET'));
-  } catch (err) {
-    if (err instanceof Error) throw createHttpError(401, err.message);
-    throw err;
-  }
+  entries = jwt.verify(payload.token, env('JWT_SECRET'));
 
   const user = await UserCollection.findOne({
-    email: entries.email,
-    _id: entries.sub,
+    email: entries.data.email,
   });
 
   if (!user) {
@@ -240,4 +219,6 @@ export const resetPassword = async (payload) => {
     { _id: user._id },
     { password: encryptedPassword },
   );
+
+  await SessionCollection.deleteOne({ userId: user._id });
 };

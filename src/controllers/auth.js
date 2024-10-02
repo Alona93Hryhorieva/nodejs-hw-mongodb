@@ -86,16 +86,7 @@ export const logoutController = async (req, res) => {
   res.status(204).send();
 };
 
-// export const requestResetEmailController = async (req, res) => {
-//   await requestResetToken(req.body.email);
-//   res.json({
-//     message: 'Reset password email was successfully sent!',
-//     status: 200,
-//     data: {},
-//   });
-// }; ВАРІАНТ КОНСПЕКТА
 export const sendResetEmailController = async (req, res, next) => {
-  // const { email } = req.body;
   // Викликаємо функцію для генерації токена та надсилання листа
   await authServices.requestResetToken(req.body.email);
   // Відповідь у разі успіху

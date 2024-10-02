@@ -4,36 +4,39 @@ import { SMTP } from '../constants/index.js';
 import { env } from '../utils/env.js';
 import createHttpError from 'http-errors';
 
+// console.log('SMTP_HOST:', env(SMTP.SMTP_HOST));
+// console.log('SMTP_PORT:', env(SMTP.SMTP_PORT));
+// console.log('SMTP_USER:', env(SMTP.SMTP_USER));
+// console.log('SMTP_PASSWORD:', env(SMTP.SMTP_PASSWORD));
+
 const transporter = nodemailer.createTransport({
-  host: env(SMTP.SMTP_HOST),
-  port: Number(env(SMTP.SMTP_PORT)),
-  secure: false, // False для TLS (587)
+  host: 'smtp-relay.brevo.com',
+  port: 587,
+  secure: false, // для TLS
   auth: {
-    user: env(SMTP.SMTP_USER),
+    user: env(SMTP.SMTP_USER), // або з process.env безпосередньо
     pass: env(SMTP.SMTP_PASSWORD),
   },
   tls: {
-    rejectUnauthorized: false, // Якщо проблема з сертифікатом
+    rejectUnauthorized: false, // Додається, якщо проблема з сертифікатом
   },
 });
 
-// export const sendEmail = async (options) => {
-//   return await transporter.sendMail(options);
-// };
-
 export const sendEmail = async (options) => {
   try {
+    // console.log('Attempting to send email with options:', options);
     const info = await transporter.sendMail(options);
-    console.log('Email sent:', info.response);
+    // console.log('Email sent successfully:', info);
     return info;
   } catch (error) {
-    console.error('Error sending email:', error); // Виводимо деталі помилки
-    throw createHttpError(
-      500,
-      'Failed to send the email, please try again later.',
-    );
+    // console.error('Failed to send email:', error.message);
+    if (error.response) {
+      // console.error('SMTP Server Response:', error.response);
+    }
+    throw createHttpError(500, `Error sending email: ${error.message}`);
   }
 };
+
 export default sendEmail;
 
 // ВАРІАНТ ВИКЛАДАЧА З ВЕРИФІКАЦІЄЮ
