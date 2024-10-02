@@ -10,7 +10,7 @@ const saveFileToUploadDir = async (file) => {
   // console.log(newPath);
 
   await fs.rename(oldPath, newPath);
-  console.log(`Файл переміщено з ${oldPath} до ${newPath}`);
+
   return file.filename;
 };
 
