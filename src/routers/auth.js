@@ -3,11 +3,9 @@ import ctrlWrapper from '../utils/ctrlWrapper.js';
 import * as authControllers from '../controllers/auth.js';
 import validateBody from '../utils/validateBody.js';
 import { userRegisterSchema, userLoginSchema } from '../validation/users.js';
-
 import { requestResetEmailSchema } from '../validation/users.js';
-import { sendResetEmailController } from '../controllers/auth.js';
 import { resetPasswordSchema } from '../validation/users.js';
-import { resetPasswordController } from '../controllers/auth.js';
+
 const authRouter = Router();
 
 authRouter.post(
@@ -30,13 +28,13 @@ authRouter.post('/logout', ctrlWrapper(authControllers.logoutController));
 authRouter.post(
   '/send-reset-email',
   validateBody(requestResetEmailSchema),
-  ctrlWrapper(sendResetEmailController),
+  ctrlWrapper(authControllers.sendResetEmailController),
 );
 
 authRouter.post(
   '/reset-pwd',
   validateBody(resetPasswordSchema),
-  ctrlWrapper(resetPasswordController),
+  ctrlWrapper(authControllers.resetPasswordController),
 );
 
 export default authRouter;
