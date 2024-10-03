@@ -201,9 +201,9 @@ export const requestResetToken = async (email) => {
 };
 
 export const resetPassword = async (payload) => {
-  // const entries = verifyToken(payload.token);
+  const entries = verifyToken(payload.token);
 
-  entries = jwt.verify(payload.token, env('JWT_SECRET'));
+  // entries = jwt.verify(payload.token, env('JWT_SECRET'));
 
   const user = await UserCollection.findOne({
     email: entries.data.email,
