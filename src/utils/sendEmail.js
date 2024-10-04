@@ -1,41 +1,52 @@
-import nodemailer from 'nodemailer';
-import 'dotenv/config';
+// import nodemailer from 'nodemailer';
+// import 'dotenv/config';
 import { SMTP } from '../constants/index.js';
 import { env } from '../utils/env.js';
+// import createHttpError from 'http-errors';
+// import nodemailer from 'nodemailer';
+// // import 'dotenv/config';
+// import createHttpError from 'http-errors';
+
+import nodemailer from 'nodemailer';
+import 'dotenv/config';
 import createHttpError from 'http-errors';
 
-// console.log('SMTP_HOST:', env(SMTP.SMTP_HOST));
-// console.log('SMTP_PORT:', env(SMTP.SMTP_PORT));
-// console.log('SMTP_USER:', env(SMTP.SMTP_USER));
-// console.log('SMTP_PASSWORD:', env(SMTP.SMTP_PASSWORD));
+const { SMTP_PASSWORD, SMTP_FROM } = process.env;
 
-const transporter = nodemailer.createTransport({
+if (!SMTP_FROM || !SMTP_PASSWORD) {
+  throw new Error('SMTP credentials are missing');
+}
+
+const nodemailerConfig = {
   host: 'smtp-relay.brevo.com',
   port: 587,
-  secure: false, // для TLS
+  secure: false, // Виправлено на false для TLS
   auth: {
-    user: env(SMTP.SMTP_USER), // або з process.env безпосередньо
-    pass: env(SMTP.SMTP_PASSWORD),
+    user: SMTP_FROM,
+    pass: SMTP_PASSWORD,
   },
   tls: {
-    rejectUnauthorized: false, // Додається, якщо проблема з сертифікатом
+    rejectUnauthorized: false, // Додаємо для певних серверів
   },
-});
+};
 
-export const sendEmail = async (options) => {
+const transport = nodemailer.createTransport(nodemailerConfig);
+
+const sendEmail = async (data) => {
+  const email = { ...data, from: SMTP_FROM };
   try {
-    // console.log('Attempting to send email with options:', options);
-    const info = await transporter.sendMail(options);
-    // console.log('Email sent successfully:', info);
+    const info = await transport.sendMail(email);
+    console.log('Email sent successfully:', info);
     return info;
   } catch (error) {
-    // console.error('Failed to send email:', error.message);
-    if (error.response) {
-      // console.error('SMTP Server Response:', error.response);
-    }
+    console.error('Error sending email:', error);
     throw createHttpError(500, `Error sending email: ${error.message}`);
   }
 };
+
+//  Логування для перевірки змінних оточення
+console.log('SMTP_FROM:', SMTP_FROM);
+console.log('SMTP_PASSWORD:', SMTP_PASSWORD);
 
 export default sendEmail;
 
@@ -62,6 +73,7 @@ export default sendEmail;
 //   return transport.sendMail(email);
 // };
 
-//  Логування для перевірки змінних оточення
-// // console.log('SMTP_FROM:', SMTP_FROM);
-// // console.log('SMTP_PASSWORD:', SMTP_PASSWORD);
+// //  Логування для перевірки змінних оточення
+// console.log('SMTP_FROM:', SMTP_FROM);
+// console.log('SMTP_PASSWORD:', SMTP_PASSWORD);
+// export default sendEmail;

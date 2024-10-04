@@ -12,9 +12,9 @@ cloudinary.config({
 });
 
 // Додаємо консольний вивід для налагодження
-console.log('CLOUD_NAME:', cloud_name);
-console.log('API_KEY:', api_key);
-console.log('API_SECRET:', api_secret);
+// console.log('CLOUD_NAME:', cloud_name);
+// console.log('API_KEY:', api_key);
+// console.log('API_SECRET:', api_secret);
 
 const saveFileToCloudinary = async (file, folder) => {
   const response = await cloudinary.uploader.upload(file.path, {

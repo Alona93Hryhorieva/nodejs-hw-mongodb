@@ -13,17 +13,17 @@ import {
   refreshTokenLifetime,
 } from '../constants/users.js';
 import { SMTP } from '../constants/index.js';
-// import { createJwtToken } from '../utils/jwt.js';
+import { createJwtToken } from '../utils/jwt.js';
 import { env } from '../utils/env.js';
 import sendEmail from '../utils/sendEmail.js';
 import { TEMPLATES_DIR } from '../constants/index.js';
 
-// const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');шлях до шаблону
+const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');
 
-// const verifyEmailTemplateSource = await fs.readFile(
-//   verifyEmailTemplatePath,
-//   'utf-8',
-// );ЗМІСТ ШАБЛОНУ-ЗАГОТОВКА
+const verifyEmailTemplateSource = await fs.readFile(
+  verifyEmailTemplatePath,
+  'utf-8',
+);
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
@@ -60,38 +60,38 @@ export const register = async (payload) => {
 
   delete data._doc.password; // Видаляємо пароль з відповіді
 
-  // const jwtToken = createJwtToken({ email });
-  // const template = handlebars.compile(verifyEmailTemplateSource);
-  // const html = template({
-  //   appDomain,
-  //   jwtToken,
-  // });СТВОРЕННЯ ШАБЛОНУ
-  //  Логіка відправлення листа
-  // const verifyEmail = {
-  //   to: email,
-  //   subject: 'Verify email',
-  //   html: `<a target="_blank" href="${appDomain}/auth/verify?token=${jwtToken}">Click verify email</a>`,
-  // };
-  // await sendEmail(verifyEmail);
+  const jwtToken = createJwtToken({ email });
+  const template = handlebars.compile(verifyEmailTemplateSource);
+  const html = template({
+    appDomain,
+    jwtToken,
+  });
+
+  const verifyEmail = {
+    to: email,
+    subject: 'Verify email',
+    html: `<a target="_blank" href="${appDomain}/auth/verify?token=${jwtToken}">Click verify email</a>`,
+  };
+  await sendEmail(verifyEmail);
 
   return data;
 };
 
-// export const verify = async (token) => {
-//   const { data, error } = verifyToken(token);
-//   if (error) {
-//     throw createHttpError(401, 'Token invalid');
-//   }
-// console.log(data);
+export const verify = async (token) => {
+  const { data, error } = verifyToken(token);
+  if (error) {
+    throw createHttpError(401, 'Token invalid');
+  }
+  console.log(data);
 
-//   const user = await UserCollection.findOne({ email: data.email });
-// console.log(data);
-//   if (user.verify) {
-//     throw createHttpError(401, 'Email already verify');
-//   }
+  const user = await UserCollection.findOne({ email: data.email });
+  console.log(data);
+  if (user.verify) {
+    throw createHttpError(401, 'Email already verify');
+  }
 
-//   await UserCollection.findOneAndUpdate({ _id: user._id }, { verify: true });
-// };
+  await UserCollection.findOneAndUpdate({ _id: user._id }, { verify: true });
+};
 
 export const login = async (payload) => {
   const { email, password } = payload;
