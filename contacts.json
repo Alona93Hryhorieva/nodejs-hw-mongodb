@@ -1,0 +1,543 @@
+[
+  {
+    "_id": {
+      "$oid": "66d75d341c52eb18924192f2"
+    },
+    "name": "Anna Kovalenko",
+    "phoneNumber": "+380000000006",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "home",
+    "createdAt": "2024-05-08T16:12:14.954182",
+    "updatedAt": "2024-05-08T16:12:14.954184"
+  },
+  {
+    "_id": {
+      "$oid": "66d75d341c52eb18924192f3"
+    },
+    "name": "Oleh Tkachuk",
+    "phoneNumber": "+380000000007",
+    "email": "andriy7@example.com",
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954187",
+    "updatedAt": "2024-05-08T16:12:14.954189"
+  },
+  {
+    "_id": {
+      "$oid": "66d75d341c52eb18924192f4"
+    },
+    "name": "Maria Petrenko",
+    "phoneNumber": "+380000000008",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954196",
+    "updatedAt": "2024-05-08T16:12:14.954198"
+  },
+  {
+    "_id": {
+      "$oid": "66d75d341c52eb18924192f5"
+    },
+    "name": "Ivan Ivanenko",
+    "phoneNumber": "+380000000009",
+    "email": "vasyl9@example.com",
+    "isFavourite": false,
+    "contactType": "home",
+    "createdAt": "2024-05-08T16:12:14.954203",
+    "updatedAt": "2024-05-08T16:12:14.954205"
+  },
+  {
+    "_id": {
+      "$oid": "66d75d341c52eb18924192f6"
+    },
+    "name": "Kateryna Kovalchuk",
+    "phoneNumber": "+3800000000010",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954208",
+    "updatedAt": "2024-05-08T16:12:14.954211"
+  },
+  {
+    "_id": {
+      "$oid": "66e0321a67c4df5916427b70"
+    },
+    "name": "Yulia",
+    "phoneNumber": "+38000000094",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-10T11:48:42.452Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-10T11:48:42.452Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66e0a6092b5fd9855ba5a601"
+    },
+    "name": "Dim234",
+    "phoneNumber": "+380000000002",
+    "email": "heighntrl@gmail.com",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-10T20:03:21.682Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-10T20:03:21.682Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66e0a64c2b5fd9855ba5a604"
+    },
+    "name": "Dim234",
+    "phoneNumber": "+380000000002",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-10T20:04:28.599Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-10T20:04:28.599Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66e2a9ac43faacfd5620a2c3"
+    },
+    "name": "mama",
+    "phoneNumber": "+380000000006",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-12T08:43:24.304Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-12T09:59:28.114Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66e2bfefddaf7bb9fdf77947"
+    },
+    "name": "Dim",
+    "phoneNumber": "+380000000002",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-12T10:18:23.505Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-12T10:18:23.505Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66e9b219554c7e76ec4f2ba0"
+    },
+    "name": "Ann111",
+    "phoneNumber": "+380564563728",
+    "isFavorite": false,
+    "contactType": "home",
+    "createdAt": {
+      "$date": "2024-09-17T16:45:13.922Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-17T16:45:13.922Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66e9b257554c7e76ec4f2ba2"
+    },
+    "name": "Ann111",
+    "phoneNumber": "+380564563728",
+    "isFavorite": false,
+    "contactType": "home",
+    "createdAt": {
+      "$date": "2024-09-17T16:46:15.233Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-17T16:46:15.233Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f077f83aa7feb4013e9c4c"
+    },
+    "name": "kapito127@gmail.com",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:03:04.577Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:03:04.577Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f079e8b046c79424e9fd84"
+    },
+    "name": "kapito127@gmail.com",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:11:20.349Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:11:20.349Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f07e3893d9b7282e9391ea"
+    },
+    "name": "kapito127@gmail.com",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:29:44.392Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:29:44.392Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f07e7276d7fcc89615dc38"
+    },
+    "name": "kapito127@gmail.com",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:30:42.997Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:30:42.997Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f07f37dfc1c41f99685870"
+    },
+    "name": "kapito127",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:33:59.676Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:33:59.676Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f07f4a882836e52a2e4c69"
+    },
+    "name": "kapito",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:34:18.405Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:34:18.405Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f07f59882836e52a2e4c6d"
+    },
+    "name": "kapito",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:34:33.292Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:34:33.292Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f0803b5326fdc5f6b45d86"
+    },
+    "name": "фдщчф",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:38:19.376Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:38:19.376Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f080f9f736f127d4c657b1"
+    },
+    "name": "фдавіваі",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:41:29.604Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:41:29.604Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f08162053ba817795bf023"
+    },
+    "name": "фдававапмв",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T20:43:14.401Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T20:43:14.401Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f08d4cb9f5e88add3efe7a"
+    },
+    "name": "kapito127@gmail.com",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T21:34:05.011Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T21:34:05.011Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f08d75b9f5e88add3efe82"
+    },
+    "name": "kapito127",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T21:34:45.322Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T21:34:45.322Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f08dadb9f5e88add3efe90"
+    },
+    "name": "kapito127",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T21:35:41.486Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T21:35:41.486Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f09255b7de32eeaf085b65"
+    },
+    "name": "kapito127@gmail.com",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T21:55:33.154Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T21:55:33.154Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f09262b7de32eeaf085b69"
+    },
+    "name": "kapito",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T21:55:46.348Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T21:55:46.348Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f0926bb7de32eeaf085b6d"
+    },
+    "name": "kapitoha",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T21:55:55.717Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T21:55:55.717Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f092b5b7de32eeaf085b79"
+    },
+    "name": "kapitoha",
+    "phoneNumber": "1234567890",
+    "isFavorite": false,
+    "contactType": "personal",
+    "createdAt": {
+      "$date": "2024-09-22T21:57:09.440Z"
+    },
+    "updatedAt": {
+      "$date": "2024-09-22T21:57:09.440Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2cc"
+    },
+    "name": "Yulia Shevchenko",
+    "phoneNumber": "+380000000001",
+    "email": "oleh1@example.com",
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954151",
+    "updatedAt": "2024-05-08T16:12:14.954158"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2cd"
+    },
+    "name": "Dmytro Boyko",
+    "phoneNumber": "+380000000002",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954163",
+    "updatedAt": "2024-05-08T16:12:14.954164"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2ce"
+    },
+    "name": "Andriy Pavlenko",
+    "phoneNumber": "+380000000003",
+    "email": "dmytro3@example.com",
+    "isFavourite": false,
+    "contactType": "home",
+    "createdAt": "2024-05-08T16:12:14.954168",
+    "updatedAt": "2024-05-08T16:12:14.954170"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2cf"
+    },
+    "name": "Yulia Shevchenko",
+    "phoneNumber": "+380000000004",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954173",
+    "updatedAt": "2024-05-08T16:12:14.954174"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2d0"
+    },
+    "name": "Kateryna Povalenko",
+    "phoneNumber": "+380000000005",
+    "email": "ivan5@example.com",
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954178",
+    "updatedAt": "2024-05-08T16:12:14.954179"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2d1"
+    },
+    "name": "Anna Kovalenko",
+    "phoneNumber": "+380000000006",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "home",
+    "createdAt": "2024-05-08T16:12:14.954182",
+    "updatedAt": "2024-05-08T16:12:14.954184"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2d2"
+    },
+    "name": "Oleh Tkachuk",
+    "phoneNumber": "+380000000007",
+    "email": "andriy7@example.com",
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954187",
+    "updatedAt": "2024-05-08T16:12:14.954189"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2d3"
+    },
+    "name": "Maria Petrenko",
+    "phoneNumber": "+380000000008",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954196",
+    "updatedAt": "2024-05-08T16:12:14.954198"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2d4"
+    },
+    "name": "Ivan Ivanenko",
+    "phoneNumber": "+380000000009",
+    "email": "vasyl9@example.com",
+    "isFavourite": false,
+    "contactType": "home",
+    "createdAt": "2024-05-08T16:12:14.954203",
+    "updatedAt": "2024-05-08T16:12:14.954205"
+  },
+  {
+    "_id": {
+      "$oid": "66f0a6294b3eb8592f0bb2d5"
+    },
+    "name": "Kateryna Kovalchuk",
+    "phoneNumber": "+3800000000010",
+    "email": null,
+    "isFavourite": false,
+    "contactType": "personal",
+    "createdAt": "2024-05-08T16:12:14.954208",
+    "updatedAt": "2024-05-08T16:12:14.954211"
+  }
+]
