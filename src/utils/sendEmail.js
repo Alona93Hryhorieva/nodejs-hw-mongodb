@@ -10,6 +10,7 @@ import { env } from '../utils/env.js';
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
 import createHttpError from 'http-errors';
+import { verifyToken } from './jwt.js';
 
 const { SMTP_PASSWORD, SMTP_FROM } = process.env;
 

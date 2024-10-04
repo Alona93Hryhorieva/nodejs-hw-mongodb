@@ -77,21 +77,21 @@ export const register = async (payload) => {
   return data;
 };
 
-export const verify = async (token) => {
-  const { data, error } = verifyToken(token);
-  if (error) {
-    throw createHttpError(401, 'Token invalid');
-  }
-  console.log(data);
+// export const verify = async (token) => {
+//   const { data, error } = verifyToken(token);
+//   if (error) {
+//     throw createHttpError(401, 'Token invalid');
+//   }
+//   console.log(data);
 
-  const user = await UserCollection.findOne({ email: data.email });
-  console.log(data);
-  if (user.verify) {
-    throw createHttpError(401, 'Email already verify');
-  }
+//   const user = await UserCollection.findOne({ email: data.email });
+//   console.log(data);
+//   if (user.verify) {
+//     throw createHttpError(401, 'Email already verify');
+//   }
 
-  await UserCollection.findOneAndUpdate({ _id: user._id }, { verify: true });
-};
+//   await UserCollection.findOneAndUpdate({ _id: user._id }, { verify: true });
+// };
 
 export const login = async (payload) => {
   const { email, password } = payload;
