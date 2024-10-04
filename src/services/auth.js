@@ -15,8 +15,9 @@ import {
 import { SMTP } from '../constants/index.js';
 import { createJwtToken } from '../utils/jwt.js';
 import { env } from '../utils/env.js';
-import sendEmail from '../utils/sendEmail.js';
+import { sendEmail } from '../utils/sendEmail.js';
 import { TEMPLATES_DIR } from '../constants/index.js';
+import { verifyToken } from '../utils/jwt.js';
 
 const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');
 
@@ -60,19 +61,19 @@ export const register = async (payload) => {
 
   delete data._doc.password; // Видаляємо пароль з відповіді
 
-  const jwtToken = createJwtToken({ email });
-  const template = handlebars.compile(verifyEmailTemplateSource);
-  const html = template({
-    appDomain,
-    jwtToken,
-  });
+  // const jwtToken = createJwtToken({ email });
+  // const template = handlebars.compile(verifyEmailTemplateSource);
+  // const html = template({
+  //   appDomain,
+  //   jwtToken,
+  // });
 
-  const verifyEmail = {
-    to: email,
-    subject: 'Verify email',
-    html: `<a target="_blank" href="${appDomain}/auth/verify?token=${jwtToken}">Click verify email</a>`,
-  };
-  await sendEmail(verifyEmail);
+  // const verifyEmail = {
+  //   to: email,
+  //   subject: 'Verify email',
+  //   html: `<a target="_blank" href="${appDomain}/auth/verify?token=${jwtToken}">Click verify email</a>`,
+  // };
+  // await sendEmail(verifyEmail);
 
   return data;
 };
