@@ -13,21 +13,25 @@ import {
   refreshTokenLifetime,
 } from '../constants/users.js';
 import { SMTP } from '../constants/index.js';
-// import { createJwtToken } from '../utils/jwt.js';
+import { createJwtToken } from '../utils/jwt.js';
 import { env } from '../utils/env.js';
-import sendEmail from '../utils/sendEmail.js';
+import { sendEmail } from '../utils/sendEmail.js';
 import { TEMPLATES_DIR } from '../constants/index.js';
+
+import { verifyToken } from '../utils/jwt.js';
+
 import {
   getFullNameFromGoogleTokenPayload,
   validateCode,
 } from '../utils/googleOAuth2.js';
 
-// const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');шлях до шаблону
 
-// const verifyEmailTemplateSource = await fs.readFile(
-//   verifyEmailTemplatePath,
-//   'utf-8',
-// );ЗМІСТ ШАБЛОНУ-ЗАГОТОВКА
+const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');
+
+const verifyEmailTemplateSource = await fs.readFile(
+  verifyEmailTemplatePath,
+  'utf-8',
+);
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
@@ -64,18 +68,18 @@ export const register = async (payload) => {
 
   delete data._doc.password; // Видаляємо пароль з відповіді
 
-  // const jwtToken = createJwtToken({ email });
-  // const template = handlebars.compile(verifyEmailTemplateSource);
-  // const html = template({
-  //   appDomain,
-  //   jwtToken,
-  // });СТВОРЕННЯ ШАБЛОНУ
-  //  Логіка відправлення листа
-  // const verifyEmail = {
-  //   to: email,
-  //   subject: 'Verify email',
-  //   html: `<a target="_blank" href="${appDomain}/auth/verify?token=${jwtToken}">Click verify email</a>`,
-  // };
+  const jwtToken = createJwtToken({ email });
+  const template = handlebars.compile(verifyEmailTemplateSource);
+  const html = template({
+    appDomain,
+    jwtToken,
+  });
+
+  const verifyEmail = {
+    to: email,
+    subject: 'Verify email',
+    html: `<a target="_blank" href="${appDomain}/auth/verify?token=${jwtToken}">Click verify email</a>`,
+  };
   // await sendEmail(verifyEmail);
 
   return data;
@@ -86,10 +90,10 @@ export const register = async (payload) => {
 //   if (error) {
 //     throw createHttpError(401, 'Token invalid');
 //   }
-// console.log(data);
+//   console.log(data);
 
 //   const user = await UserCollection.findOne({ email: data.email });
-// console.log(data);
+//   console.log(data);
 //   if (user.verify) {
 //     throw createHttpError(401, 'Email already verify');
 //   }
@@ -204,26 +208,57 @@ export const requestResetToken = async (email) => {
   });
 };
 
-export const resetPassword = async (payload) => {
-  // const entries = verifyToken(payload.token);
+// export const resetPassword = async (payload) => {
+//   const entries = verifyToken(payload.token);
 
-  entries = jwt.verify(payload.token, env('JWT_SECRET'));
+//   // entries = jwt.verify(payload.token, env('JWT_SECRET'));
+
+//   const user = await UserCollection.findOne({
+//     email: entries.data.email,
+//   });
+
+//   if (!user) {
+//     throw createHttpError(404, 'User not found');
+//   }
+
+//   const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+//   await UserCollection.updateOne(
+//     { _id: user._id },
+//     { password: encryptedPassword },
+//   );
+
+//   await SessionCollection.deleteOne({ userId: user._id });
+// };
+export const resetPassword = async (payload) => {
+  // Перевірка токена і отримання даних користувача
+  // const entries = verifyToken(payload.token);
+  const entries = verifyToken(req.headers.authorization.split(' ')[1]);
+
+  // Якщо токен не містить email
+  if (!entries || !entries.data || !entries.data.email) {
+    throw createHttpError(400, 'Invalid token. Email not found in token.');
+  }
 
   const user = await UserCollection.findOne({
     email: entries.data.email,
   });
 
+  // Якщо користувача не знайдено
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
 
+  // Хешування нового пароля
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
+  // Оновлення пароля користувача
   await UserCollection.updateOne(
     { _id: user._id },
     { password: encryptedPassword },
   );
 
+  // Видалення сесії користувача
   await SessionCollection.deleteOne({ userId: user._id });
 };
 

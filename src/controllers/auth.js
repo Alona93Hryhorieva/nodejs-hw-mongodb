@@ -3,6 +3,7 @@ import * as authServices from '../services/auth.js';
 // import { requestResetToken } from '../services/auth.js';
 // import { resetPassword } from '../services/auth.js';
 import { validateBody } from '../utils/validateBody.js';
+import { verifyToken } from '../utils/jwt.js';
 
 import { generateAuthUrl } from '../utils/googleOAuth2.js';
 import { loginOrSignupWithGoogle } from '../services/auth.js';
@@ -88,24 +89,85 @@ export const logoutController = async (req, res) => {
   res.status(204).send();
 };
 
+// export const sendResetEmailController = async (req, res, next) => {
+//   // Викликаємо функцію для генерації токена та надсилання листа
+//   await authServices.requestResetToken(req.body.email);
+//   // Відповідь у разі успіху
+//   res.status(200).json({
+//     status: 200,
+//     message: 'Reset password email has been successfully sent.',
+//     data: {},
+//   });
+// };
 export const sendResetEmailController = async (req, res, next) => {
-  // Викликаємо функцію для генерації токена та надсилання листа
-  await authServices.requestResetToken(req.body.email);
-  // Відповідь у разі успіху
-  res.status(200).json({
-    status: 200,
-    message: 'Reset password email has been successfully sent.',
-    data: {},
-  });
+  const { email } = req.body; // Деструктуризація
+
+  // Перевірка наявності email у запиті
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required.' });
+  }
+
+  try {
+    // Викликаємо функцію для генерації токена та надсилання листа
+    await authServices.requestResetToken(email);
+
+    // Відповідь у разі успіху
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {},
+    });
+  } catch (error) {
+    // Обробка помилок
+    next(error); // Передача помилки в обробник помилок
+  }
 };
 
+// export const resetPasswordController = async (req, res) => {
+//   await authServices.resetPassword(req.body);
+//   res.json({
+//     message: 'Password was successfully reset!',
+//     status: 200,
+//     data: {},
+//   });
+// };
 export const resetPasswordController = async (req, res) => {
-  await authServices.resetPassword(req.body);
-  res.json({
-    message: 'Password was successfully reset!',
-    status: 200,
-    data: {},
-  });
+  // Отримуємо токен з заголовка авторизації
+  const token = req.headers.authorization?.split(' ')[1]; // Додано "?." для обробки випадків, коли заголовок може бути відсутнім
+
+  // Перевірка наявності токена
+  if (!token) {
+    return res.status(400).json({ message: 'Token is required.' });
+  }
+
+  const { password } = req.body; // Отримуємо новий пароль з тіла запиту
+
+  // Перевіряємо токен
+  const { data, error } = verifyToken(token); // Перевіряємо токен
+
+  // Обробка помилок перевірки токена
+  if (error) {
+    return res.status(400).json({ message: 'Invalid token', error });
+  }
+
+  // Перевірка наявності електронної адреси в даних
+  if (!data || !data.email) {
+    return res.status(400).json({ message: 'Email not found in token.' });
+  }
+
+  try {
+    // Виклик сервісу скидання пароля з електронною адресою та новим паролем
+    await authServices.resetPassword({ email: data.email, password });
+    res.json({
+      message: 'Password was successfully reset!',
+      status: 200,
+      data: {},
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Failed to reset password.', error: error.message });
+  }
 };
 
 export const getGoogleOAuthUrlController = async (req, res) => {
