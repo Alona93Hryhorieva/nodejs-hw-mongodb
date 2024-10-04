@@ -1,27 +1,24 @@
 import * as authServices from '../services/auth.js';
 
-// const setupSession = (res, session) => {
-//   res.cookie('refreshToken', session.refreshToken, {
-//     httpOnly: true,
-//     expire: new Date(Date.now() + session.refreshTokenValidUntil),
-//   });
-//   res.cookie('sessionId', session._id, {
-//     httpOnly: true,
-//     expire: new Date(Date.now() + session.refreshTokenValidUntil),
-//   });
-// };
+// import { requestResetToken } from '../services/auth.js';
+// import { resetPassword } from '../services/auth.js';
+import { validateBody } from '../utils/validateBody.js';
+import { verifyToken } from '../utils/jwt.js';
+
+import { generateAuthUrl } from '../utils/googleOAuth2.js';
+import { loginOrSignupWithGoogle } from '../services/auth.js';
 
 const setupSession = (res, session) => {
   const refreshTokenExpiry = new Date(session.refreshTokenValidUntil); // Конвертуємо в дату
 
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: refreshTokenExpiry, // Використовуємо дату без змін
+    expires: refreshTokenExpiry,
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expires: refreshTokenExpiry, // Використовуємо дату без змін
+    expires: refreshTokenExpiry,
   });
 };
 
@@ -35,6 +32,17 @@ export const registerController = async (req, res) => {
   });
 };
 
+// export const verifyController = async (req, res) => {
+//   const { token } = req.query;
+//   await authServices.verify(token);
+
+//   res.json({
+//     status: 200,
+//     message: 'Email verified successfully',
+//     data: {},
+//   });
+// };
+
 export const loginController = async (req, res) => {
   const session = await authServices.login(req.body);
 
@@ -46,7 +54,6 @@ export const loginController = async (req, res) => {
     data: {
       accessToken: session.accessToken,
     },
-    // refreshToken: session.refreshToken,
   });
 };
 
@@ -79,6 +86,110 @@ export const logoutController = async (req, res) => {
 
   res.clearCookie('sessionId');
   res.clearCookie('refreshToken');
-
   res.status(204).send();
+};
+
+// export const sendResetEmailController = async (req, res, next) => {
+//   // Викликаємо функцію для генерації токена та надсилання листа
+//   await authServices.requestResetToken(req.body.email);
+//   // Відповідь у разі успіху
+//   res.status(200).json({
+//     status: 200,
+//     message: 'Reset password email has been successfully sent.',
+//     data: {},
+//   });
+// };
+export const sendResetEmailController = async (req, res, next) => {
+  const { email } = req.body; // Деструктуризація
+
+  // Перевірка наявності email у запиті
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required.' });
+  }
+
+  try {
+    // Викликаємо функцію для генерації токена та надсилання листа
+    await authServices.requestResetToken(email);
+
+    // Відповідь у разі успіху
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {},
+    });
+  } catch (error) {
+    // Обробка помилок
+    next(error); // Передача помилки в обробник помилок
+  }
+};
+
+// export const resetPasswordController = async (req, res) => {
+//   await authServices.resetPassword(req.body);
+//   res.json({
+//     message: 'Password was successfully reset!',
+//     status: 200,
+//     data: {},
+//   });
+// };
+export const resetPasswordController = async (req, res) => {
+  // Отримуємо токен з заголовка авторизації
+  const token = req.headers.authorization?.split(' ')[1]; // Додано "?." для обробки випадків, коли заголовок може бути відсутнім
+
+  // Перевірка наявності токена
+  if (!token) {
+    return res.status(400).json({ message: 'Token is required.' });
+  }
+
+  const { password } = req.body; // Отримуємо новий пароль з тіла запиту
+
+  // Перевіряємо токен
+  const { data, error } = verifyToken(token); // Перевіряємо токен
+
+  // Обробка помилок перевірки токена
+  if (error) {
+    return res.status(400).json({ message: 'Invalid token', error });
+  }
+
+  // Перевірка наявності електронної адреси в даних
+  if (!data || !data.email) {
+    return res.status(400).json({ message: 'Email not found in token.' });
+  }
+
+  try {
+    // Виклик сервісу скидання пароля з електронною адресою та новим паролем
+    await authServices.resetPassword({ email: data.email, password });
+    res.json({
+      message: 'Password was successfully reset!',
+      status: 200,
+      data: {},
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Failed to reset password.', error: error.message });
+  }
+};
+
+export const getGoogleOAuthUrlController = async (req, res) => {
+  const url = generateAuthUrl();
+  res.json({
+    status: 200,
+    message: 'Successfully get Google OAuth url!',
+    data: {
+      url,
+    },
+  });
+};
+
+export const loginWithGoogleController = async (req, res) => {
+  const session = await loginOrSignupWithGoogle(req.body.code);
+  setupSession(res, session);
+
+  res.json({
+    status: 200,
+    message: 'Successfully logged in via Google OAuth!',
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
 };

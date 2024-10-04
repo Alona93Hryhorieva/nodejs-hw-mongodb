@@ -8,6 +8,7 @@ import {
   contactPatchSchema,
 } from '../validation/contacts.js';
 import isValidId from '../middlewares/isValidId.js';
+import upload from '../middlewares/upload.js';
 
 const contactsRouter = Router();
 
@@ -19,15 +20,28 @@ contactsRouter.get(
 );
 
 contactsRouter.get(
-  '/:contactId', isValidId,
+  '/:contactId',
+  isValidId,
   ctrlWrapper(contactControllers.getContactByIdController),
 );
 
 contactsRouter.post(
   '/',
+  upload.single('photo'),
   validateBody(contactAddSchema),
   ctrlWrapper(contactControllers.addContactController),
 );
+
+contactsRouter.patch(
+  '/:contactId',
+  isValidId,
+  upload.single('photo'),
+  validateBody(contactPatchSchema),
+  ctrlWrapper(contactControllers.patchContactController),
+);
+
+// upload.fields([{name: "poster", maxCount: 1}, {name: "subposter", maxCount: 2}])
+// upload.array("poster", 8)  ДЕКІЛЬКА ФАЙЛІВ В ПОЛІ
 
 contactsRouter.put(
   '/:contactId',

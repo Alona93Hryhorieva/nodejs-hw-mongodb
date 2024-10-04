@@ -4,6 +4,11 @@ import parsePaginationParams from '../utils/parsePaginationParams.js';
 import parseSortParams from '../utils/parseSortParams.js';
 import { sortFields } from '../db/models/Contact.js';
 import parseContactFilterParams from '../utils/filters/parseContactFilterParams.js';
+import saveFileToUploadDir from '../utils/saveFileToUploadDir.js';
+import saveFileToCloudinary from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
+
+const enableCloudinary = env('ENABLE_CLOUDINARY');
 
 export const getAllContactsController = async (req, res) => {
   const { perPage, page } = parsePaginationParams(req.query);
@@ -13,6 +18,10 @@ export const getAllContactsController = async (req, res) => {
   const filter = parseContactFilterParams(req.query);
 
   const { _id: userId } = req.user;
+  // const { role: role } = req.user;
+  //  if (role === ROLES.ADMIN) {
+  //    userId = null;
+  //  }
 
   const data = await contactServices.getAllContacts({
     perPage,
@@ -45,8 +54,23 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactController = async (req, res) => {
+  // console.log(req.body);
+  // console.log(req.file);
+  let photo;
+  if (req.file) {
+    if (enableCloudinary === 'true') {
+      photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+  }
+
   const { _id: userId } = req.user;
-  const data = await contactServices.createContact({ ...req.body, userId });
+  const data = await contactServices.createContact({
+    ...req.body,
+    userId,
+    photo,
+  });
 
   res.status(201).json({
     status: 201,
@@ -61,7 +85,7 @@ export const upsertContactController = async (req, res) => {
 
   const { isNew, data } = await contactServices.updateContact(
     { _id: contactId, userId },
-    req.body,
+    { ...req.body, photo },
     { upsert: true },
   );
 
@@ -75,8 +99,22 @@ export const upsertContactController = async (req, res) => {
 };
 
 export const patchContactController = async (req, res) => {
+  let photo;
+  if (req.file) {
+    if (enableCloudinary === 'true') {
+      photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
+    } else {
+      photo = await saveFileToUploadDir(req.file);
+    }
+  }
+
   const { contactId } = req.params;
   const { _id: userId } = req.user;
+
+  const updatedData = {
+    ...req.body,
+    ...(req.file && { photo: req.file.path }), // Додаємо шлях до завантаженого фото, якщо воно є
+  };
 
   const result = await contactServices.updateContact(
     { _id: contactId, userId },
@@ -91,7 +129,8 @@ export const patchContactController = async (req, res) => {
   res.json({
     status: 200,
     message: 'Contact patched successfully',
-    data: result.data,
+    // data: result.data,ЦЕ ПЕРШЕ БУЛО
+    data: result, // Повертаємо сам оновлений документ
   });
 };
 
