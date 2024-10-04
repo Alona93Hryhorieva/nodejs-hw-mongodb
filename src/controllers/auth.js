@@ -1,12 +1,7 @@
 import * as authServices from '../services/auth.js';
-
-// import { requestResetToken } from '../services/auth.js';
-// import { resetPassword } from '../services/auth.js';
-import { validateBody } from '../utils/validateBody.js';
+import { generateGoogleOAuthUrl } from '../utils/googleOAuth2.js';
+// import { validateBody } from '../utils/validateBody.js';
 import { verifyToken } from '../utils/jwt.js';
-
-import { generateAuthUrl } from '../utils/googleOAuth2.js';
-import { loginOrSignupWithGoogle } from '../services/auth.js';
 
 const setupSession = (res, session) => {
   const refreshTokenExpiry = new Date(session.refreshTokenValidUntil); // Конвертуємо в дату
@@ -171,7 +166,8 @@ export const resetPasswordController = async (req, res) => {
 };
 
 export const getGoogleOAuthUrlController = async (req, res) => {
-  const url = generateAuthUrl();
+  const url = generateGoogleOAuthUrl();
+  // const url = 'http://';
   res.json({
     status: 200,
     message: 'Successfully get Google OAuth url!',
@@ -182,6 +178,7 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 };
 
 export const loginWithGoogleController = async (req, res) => {
+  console.log(req.body.code);
   const session = await loginOrSignupWithGoogle(req.body.code);
   setupSession(res, session);
 

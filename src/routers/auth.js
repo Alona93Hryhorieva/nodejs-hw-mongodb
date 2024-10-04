@@ -41,12 +41,12 @@ authRouter.post(
 );
 
 authRouter.get(
-  '/get-oauth-url',
+  '/google-oauth-url',
   ctrlWrapper(authControllers.getGoogleOAuthUrlController),
 );
 
 authRouter.post(
-  '/confirm-oauth',
+  '/confirm-google',
   validateBody(loginWithGoogleOAuthSchema),
   ctrlWrapper(authControllers.loginWithGoogleController),
 );

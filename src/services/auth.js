@@ -20,10 +20,7 @@ import { TEMPLATES_DIR } from '../constants/index.js';
 
 import { verifyToken } from '../utils/jwt.js';
 
-import {
-  getFullNameFromGoogleTokenPayload,
-  validateCode,
-} from '../utils/googleOAuth2.js';
+import { validateCode } from '../utils/googleOAuth2.js';
 
 const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');
 
@@ -264,17 +261,24 @@ export const resetPassword = async (payload) => {
 export const loginOrSignupWithGoogle = async (code) => {
   const loginTicket = await validateCode(code);
   const payload = loginTicket.getPayload();
+
   if (!payload) throw createHttpError(401);
 
   let user = await UserCollectionCollection.findOne({ email: payload.email });
+
   if (!user) {
-    const password = await bcrypt.hash(randomBytes(10), 10);
+    const password = randomBytes(10);
+    const hashPassword = await bcrypt.hash(password, 10);
     user = await UserCollection.create({
       email: payload.email,
+      // username: payload.name,
       name: getFullNameFromGoogleTokenPayload(payload),
-      password,
+      password: hashPassword,
+      //   verify: true,
       role: 'parent',
     });
+
+    delete user._doc.password;
   }
 
   const newSession = createSession();
