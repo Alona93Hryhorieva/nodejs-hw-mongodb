@@ -7,6 +7,7 @@ import parseContactFilterParams from '../utils/filters/parseContactFilterParams.
 import saveFileToUploadDir from '../utils/saveFileToUploadDir.js';
 import saveFileToCloudinary from '../utils/saveFileToCloudinary.js';
 import { env } from '../utils/env.js';
+import mongoose from 'mongoose';
 
 const enableCloudinary = env('ENABLE_CLOUDINARY');
 
@@ -78,7 +79,38 @@ export const addContactController = async (req, res) => {
     data,
   });
 };
+// export const upsertContactController = async (req, res) => {
+//   let photo;
+//   if (req.file) {
+//     photo =
+//       enableCloudinary === 'true'
+//         ? await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb')
+//         : await saveFileToUploadDir(req.file);
+//   }
 
+//   const { contactId } = req.params;
+//   const { _id: userId } = req.user;
+
+//   // Оновлюємо тільки ті поля, що були передані
+//   const updatedData = {
+//     ...req.body,
+//     ...(photo && { photo }), // Якщо фото було завантажене, додаємо його до оновлень
+//   };
+
+//   const { isNew, data } = await contactServices.updateContact(
+//     { _id: contactId, userId },
+//     updatedData,
+//     { upsert: true },
+//   );
+
+//   const status = isNew ? 201 : 200;
+
+//   res.status(status).json({
+//     status,
+//     message: 'Contact upserted successfully',
+//     data,
+//   });
+// };
 export const upsertContactController = async (req, res) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
@@ -98,39 +130,97 @@ export const upsertContactController = async (req, res) => {
   });
 };
 
-export const patchContactController = async (req, res) => {
+// export const patchContactController = async (req, res) => {
+//   let photo;
+//   if (req.file) {
+//     if (enableCloudinary === 'true') {
+//       photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
+//     } else {
+//       photo = await saveFileToUploadDir(req.file);
+//     }
+//   }
+
+//   const { contactId } = req.params;
+//   const { _id: userId } = req.user;
+
+//   // Формуємо нові дані для оновлення контакту
+//   const updatedData = {
+//     ...req.body,
+//     ...(photo && { photo }), // Додаємо URL або шлях до фото, якщо є
+//   };
+
+//   // Оновлюємо контакт
+//   const result = await contactServices.updateContact(
+//     { _id: contactId, userId },
+//     updatedData, // Використовуємо нові дані
+//     { new: true },
+//   );
+
+//   if (!result) {
+//     throw createHttpError(404, `Contact ${contactId} not found`);
+//   }
+
+//   // Формуємо відповідь, видаляючи зайві поля
+//   const { __v, isNew, ...data } = result.toObject(); // Перетворюємо на об'єкт і видаляємо поля
+
+//   res.json({
+//     status: 200,
+//     message: 'Contact patched successfully',
+//     data, // Повертаємо очищені дані
+//   });
+// };
+export const patchContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+
+  // Перевіряємо, чи є contactId дійсним ObjectId
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    return res.status(400).json({
+      message: `${contactId} not valid ID format`,
+    });
+  }
+
   let photo;
   if (req.file) {
-    if (enableCloudinary === 'true') {
-      photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
-    } else {
-      photo = await saveFileToUploadDir(req.file);
+    try {
+      if (enableCloudinary === 'true') {
+        photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
+      } else {
+        photo = await saveFileToUploadDir(req.file);
+      }
+    } catch (error) {
+      return next(createHttpError(500, 'Error saving file'));
     }
   }
 
-  const { contactId } = req.params;
   const { _id: userId } = req.user;
 
+  // Формуємо нові дані для оновлення контакту
   const updatedData = {
     ...req.body,
-    ...(req.file && { photo: req.file.path }), // Додаємо шлях до завантаженого фото, якщо воно є
+    ...(photo && { photo }),
   };
 
+  // Оновлюємо контакт
   const result = await contactServices.updateContact(
     { _id: contactId, userId },
-    req.body,
+    updatedData,
     { new: true },
   );
 
   if (!result) {
-    throw createHttpError(404, `Contact ${contactId} not found`);
+    return next(createHttpError(404, `Contact ${contactId} not found`));
   }
+
+  // Повертаємо очищені дані без toObject()
+  const data = result.toObject ? result.toObject() : result; // Перевірка, чи result є документом
+
+  // Якщо data має поля, які не потрібно повертати
+  const { __v, isNew, ...cleanData } = data;
 
   res.json({
     status: 200,
     message: 'Contact patched successfully',
-    // data: result.data,ЦЕ ПЕРШЕ БУЛО
-    data: result, // Повертаємо сам оновлений документ
+    data: cleanData,
   });
 };
 

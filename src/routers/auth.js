@@ -5,8 +5,7 @@ import validateBody from '../utils/validateBody.js';
 import { userRegisterSchema, userLoginSchema } from '../validation/users.js';
 import { requestResetEmailSchema } from '../validation/users.js';
 import { resetPasswordSchema } from '../validation/users.js';
-// import { getGoogleOAuthUrlController } from '../controllers/auth.js';
-// import { loginController } from '../controllers/auth.js';
+
 const authRouter = Router();
 
 authRouter.post(

@@ -46,24 +46,29 @@ export const getAllContacts = async ({
   };
 };
 
-// export const getContactById = (id) => ContactCollection.findById(id);
+export const getContactById = (id) => ContactCollection.findById(id);
+
 export const getContact = (filter) => ContactCollection.findOne(filter);
 
 export const createContact = (payload) => ContactCollection.create(payload);
 
 export const updateContact = async (filter, data, options = {}) => {
   const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
-    includeResultMetadata: true,
+    new: true, // Додайте цю опцію для повернення оновленого документа
     ...options,
   });
 
-  if (!rawResult || !rawResult.value) return null;
+  if (!rawResult) return null; // Якщо результату немає, повертаємо null
 
-  return {
-    data: rawResult.value,
-    isNew: Boolean(rawResult.lastErrorObject?.upserted),
-  };
+  // Повертаємо безпосередньо rawResult, якщо це звичайний об'єкт
+  return rawResult; // Якщо rawResult є документом Mongoose, ви можете повернути його без змін
 };
+// export const updateContact = async (filter, update, options) => {
+//   return await Contact.findOneAndUpdate(filter, update, {
+//     ...options,
+//     runValidators: true,
+//   });
+// };
 
 export const deleteContact = (filter) =>
   ContactCollection.findOneAndDelete(filter);

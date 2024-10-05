@@ -162,38 +162,39 @@ export const logout = async (sessionId) => {
 
 export const findUser = (filter) => UserCollection.findOne(filter);
 
+// src/services/auth.js
+
 export const requestResetToken = async (email) => {
   const user = await UserCollection.findOne({ email });
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
-  // Створюємо JWT токен
   const resetToken = jwt.sign(
     {
       sub: user._id,
       email,
     },
     env('JWT_SECRET'),
-    { expiresIn: '15m' },
+    {
+      expiresIn: '15m',
+    },
   );
 
-  // Читання шаблону
   const resetPasswordTemplatePath = path.join(
     TEMPLATES_DIR,
     'reset-password-email.html',
   );
+
   const templateSource = (
     await fs.readFile(resetPasswordTemplatePath)
   ).toString();
-  const template = handlebars.compile(templateSource.toString());
 
-  // Створення HTML контенту листа
+  const template = handlebars.compile(templateSource);
   const html = template({
     name: user.name,
-    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`, // Формуємо посилання
+    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
   });
 
-  // Відправка листа
   await sendEmail({
     from: env(SMTP.SMTP_FROM),
     to: email,
@@ -202,56 +203,29 @@ export const requestResetToken = async (email) => {
   });
 };
 
-// export const resetPassword = async (payload) => {
-//   const entries = verifyToken(payload.token);
-
-//   // entries = jwt.verify(payload.token, env('JWT_SECRET'));
-
-//   const user = await UserCollection.findOne({
-//     email: entries.data.email,
-//   });
-
-//   if (!user) {
-//     throw createHttpError(404, 'User not found');
-//   }
-
-//   const encryptedPassword = await bcrypt.hash(payload.password, 10);
-
-//   await UserCollection.updateOne(
-//     { _id: user._id },
-//     { password: encryptedPassword },
-//   );
-
-//   await SessionCollection.deleteOne({ userId: user._id });
-// };
 export const resetPassword = async (payload) => {
-  // Перевірка токена і отримання даних користувача
-  // const entries = verifyToken(payload.token);
-  const entries = verifyToken(req.headers.authorization.split(' ')[1]);
+  let entries;
 
-  // Якщо токен не містить email
-  if (!entries || !entries.data || !entries.data.email) {
-    throw createHttpError(400, 'Invalid token. Email not found in token.');
+  try {
+    entries = jwt.verify(payload.token, env('JWT_SECRET'));
+  } catch (err) {
+    if (err instanceof Error) throw createHttpError(401, err.message);
+    throw err;
   }
 
   const user = await UserCollection.findOne({
-    email: entries.data.email,
+    email: entries.email,
+    _id: entries.sub,
   });
 
-  // Якщо користувача не знайдено
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
 
-  // Хешування нового пароля
   const encryptedPassword = await bcrypt.hash(payload.password, 10);
 
-  // Оновлення пароля користувача
   await UserCollection.updateOne(
     { _id: user._id },
     { password: encryptedPassword },
   );
-
-  // Видалення сесії користувача
-  await SessionCollection.deleteOne({ userId: user._id });
 };
