@@ -1,7 +1,7 @@
 tags:
   - Contacts
 summary: Get list of contacts
-operationId: getAllContacts
+operationId: getContacts
 description: 'Get list of contacts. You can get access only to contacts added by you'
 security:
   - bearerAuth: []
@@ -39,6 +39,7 @@ parameters:
       type: string
       enum: ['work', 'home', 'personal']
       example: home
+
 responses:
   '200':
     description: Successfully found contacts!
@@ -60,7 +61,7 @@ responses:
             data:
               type: object
               required:
-                - data
+                - contacts
                 - page
                 - perPage
                 - totalItems

@@ -35,13 +35,6 @@ export const contactAddSchema = Joi.object({
     }),
 });
 
-// export const contactPatchSchema = Joi.object({
-//   name: Joi.string().min(3).max(20),
-//   phoneNumber: Joi.string(),
-//   email: Joi.string().email().min(3).max(20),
-//   isFavorite: Joi.boolean(),
-//   contactType: Joi.string().min(3).max(20).valid('work', 'home', 'personal'),
-// });
 export const contactPatchSchema = Joi.object({
   name: Joi.string().min(3).max(20).required().messages({
     'any.required': 'Name is required',

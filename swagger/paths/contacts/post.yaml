@@ -20,11 +20,11 @@ requestBody:
             type: string
             minLength: 3
             maxLength: 20
-            example: 'John Doe'
+            example: 765fb3001
           phoneNumber:
             type: string
             description: Contact phone number
-            example: '+380671338855'
+            example: 123456789
           email:
             type: string
             description: Contact email
@@ -37,7 +37,7 @@ requestBody:
             type: string
             description: Type of contact
             enum: ['work', 'home', 'personal']
-            example: home
+            example: personal
           photo:
             type: string
             format: binary
@@ -63,7 +63,5 @@ responses:
             data:
               type: object
               $ref: ../../components/schemas/contact.yaml
-  '400':
-    $ref: ../../components/responses/contacts/400.yaml
   '401':
     $ref: ../../components/responses/contacts/401.yaml
