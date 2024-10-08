@@ -50,4 +50,6 @@ responses:
                   description: JWT access token for the logged-in user
                   example: ksIErcdA0oBwLX79f4bPcYXWKyEX/hcN6OcDU1Ll
   '404':
-    $ref: '../../../components/responses/auth/404.yaml'
+    $ref: ..\..\..\components\responses\auth\404-not-found.yaml
+  '401':
+    $ref: ..\..\..\components\responses\auth\401-unauthorized.yaml

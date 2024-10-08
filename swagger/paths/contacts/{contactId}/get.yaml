@@ -11,7 +11,7 @@ parameters:
     required: true
     schema:
       type: string
-      example: '65ca67e7ae7f10c88b598384'
+      example: '66fe4cb698df3f8ead122967'
 responses:
   '200':
     description: 'Get contact by id'
@@ -33,5 +33,9 @@ responses:
             data:
               type: object
               $ref: '../../../components/schemas/contact.yaml'
+  '404':
+    $ref: ../../../components/responses/contacts/404.yaml
   '401':
     $ref: ../../../components/responses/contacts/401.yaml
+  '500':
+    $ref: ../../../components/responses/contacts/500.yaml

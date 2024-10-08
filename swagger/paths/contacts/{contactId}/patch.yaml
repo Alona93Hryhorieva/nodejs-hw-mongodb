@@ -71,5 +71,5 @@ responses:
     $ref: ../../../components/responses/contacts/404.yaml
   '401':
     $ref: ../../../components/responses/contacts/401.yaml
-  '400':
-    $ref: ../../../components/responses/contacts/400.yaml
+  '500':
+    $ref: ../../../components/responses/contacts/500.yaml

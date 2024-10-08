@@ -7,19 +7,19 @@ properties:
   _id:
     type: string
     description: Unique identifier for the user
-    example: '66b0ab77141205369a56ed0d'
+    example: '670114be4f51e3aee1dc33b4'
   name:
     type: string
     description: Name of the user
-    example: 'Nelli'
+    example: '7d5ef4004@smtp-brevo.com'
   email:
     type: string
     description: Email address of the user
-    example: 'test@gmail.com'
+    example: 'kapitochka127@ukr.net'
   password:
     type: string
     description: Hashed password of the user
-    example: '$2b$10$vb1B/.F5AZFFb6w8TzgHaO8X72dj3nzQ.02HEj1IjqJ1eT2YXM5AC'
+    example: '$2b$10$9VzDeq53xt1zoh6B7H6W.OkOkunOkEiMFchqC16rob7k.2PsuoxmK'
   createdAt:
     type: string
     format: date-time

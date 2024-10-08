@@ -38,7 +38,7 @@ parameters:
     schema:
       type: string
       enum: ['work', 'home', 'personal']
-      example: home
+      example: personal
 
 responses:
   '200':
@@ -85,11 +85,12 @@ responses:
                 totalPages:
                   type: number
                   example: 4
-                hasPreviousPage:
-                  type: boolean
-                  example: true
                 hasNextPage:
                   type: boolean
                   example: false
+                hasPreviousPage:
+                  type: boolean
+                  example: true
+
   '401':
     $ref: ../../components/responses/contacts/401.yaml

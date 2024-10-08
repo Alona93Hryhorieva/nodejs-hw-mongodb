@@ -43,7 +43,7 @@ responses:
             data:
               type: object
               properties: {}
-  '401':
-    $ref: '../../../components/responses/auth/401.yaml'
+  '400':
+    $ref: ..\..\..\components\responses\auth\400-bad-request.yaml
   '404':
-    $ref: '../../../components/responses/auth/404.yaml'
+    $ref: ..\..\..\components\responses\auth\404-not-found.yaml

@@ -97,7 +97,7 @@
                 "home",
                 "personal"
               ],
-              "example": "home"
+              "example": "personal"
             }
           }
         ],
@@ -156,13 +156,13 @@
                           "type": "number",
                           "example": 4
                         },
-                        "hasPreviousPage": {
-                          "type": "boolean",
-                          "example": true
-                        },
                         "hasNextPage": {
                           "type": "boolean",
                           "example": false
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": true
                         }
                       }
                     }
@@ -273,6 +273,9 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       }
@@ -297,7 +300,7 @@
             "required": true,
             "schema": {
               "type": "string",
-              "example": "65ca67e7ae7f10c88b598384"
+              "example": "66fe4cb698df3f8ead122967"
             }
           }
         ],
@@ -333,6 +336,12 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       },
@@ -438,14 +447,14 @@
               }
             }
           },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
           "401": {
             "$ref": "#/components/responses/401"
           },
           "404": {
             "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
           }
         }
       },
@@ -475,7 +484,28 @@
         ],
         "responses": {
           "204": {
-            "description": "Successfully deleted the contact. No content in response."
+            "description": "Contact deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 204
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully deleted contact with id 65ca67e7ae7f10c88b598384!"
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -558,7 +588,10 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/400-2"
+            "$ref": "#/components/responses/400-bad-request"
+          },
+          "401": {
+            "$ref": "#/components/responses/401-unauthorized"
           }
         }
       }
@@ -637,8 +670,11 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/401-unauthorized"
+          },
           "404": {
-            "$ref": "#/components/responses/404-2"
+            "$ref": "#/components/responses/404-not-found"
           }
         }
       }
@@ -661,7 +697,7 @@
             "description": "Successfully logged out. No content in response."
           },
           "401": {
-            "$ref": "#/components/responses/401-2"
+            "$ref": "#/components/responses/400-bad-request"
           }
         }
       }
@@ -747,8 +783,11 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/400-bad-request"
+          },
           "401": {
-            "$ref": "#/components/responses/401-2"
+            "$ref": "#/components/responses/401-unauthorized"
           }
         }
       }
@@ -814,10 +853,10 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/400-2"
+            "$ref": "#/components/responses/400-bad-request"
           },
           "404": {
-            "$ref": "#/components/responses/404-2"
+            "$ref": "#/components/responses/404-not-found"
           }
         }
       }
@@ -887,11 +926,11 @@
               }
             }
           },
-          "401": {
-            "$ref": "#/components/responses/401-2"
+          "400": {
+            "$ref": "#/components/responses/400-bad-request"
           },
           "404": {
-            "$ref": "#/components/responses/404-2"
+            "$ref": "#/components/responses/404-not-found"
           }
         }
       }
@@ -937,7 +976,7 @@
           "email": {
             "type": "string",
             "description": "Contact email",
-            "example": "john.doe@example.com"
+            "example": "kapitochka1271@gmail.com"
           },
           "isFavourite": {
             "type": "boolean",
@@ -989,22 +1028,22 @@
           "_id": {
             "type": "string",
             "description": "Unique identifier for the user",
-            "example": "66b0ab77141205369a56ed0d"
+            "example": "670114be4f51e3aee1dc33b4"
           },
           "name": {
             "type": "string",
             "description": "Name of the user",
-            "example": "Nelli"
+            "example": "7d5ef4004@smtp-brevo.com"
           },
           "email": {
             "type": "string",
             "description": "Email address of the user",
-            "example": "test@gmail.com"
+            "example": "kapitochka127@ukr.net"
           },
           "password": {
             "type": "string",
             "description": "Hashed password of the user",
-            "example": "$2b$10$vb1B/.F5AZFFb6w8TzgHaO8X72dj3nzQ.02HEj1IjqJ1eT2YXM5AC"
+            "example": "$2b$10$9VzDeq53xt1zoh6B7H6W.OkOkunOkEiMFchqC16rob7k.2PsuoxmK"
           },
           "createdAt": {
             "type": "string",
@@ -1022,87 +1061,6 @@
       }
     },
     "responses": {
-      "400": {
-        "description": "Bad Request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 400
-                },
-                "message": {
-                  "type": "string",
-                  "example": "BadRequestError"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message",
-                    "errors"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Bad request"
-                    },
-                    "errors": {
-                      "type": "array",
-                      "description": "List of validation errors",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "message": {
-                            "type": "string",
-                            "description": "Description of the validation error",
-                            "example": "\"name\" is required"
-                          },
-                          "path": {
-                            "type": "array",
-                            "description": "Path of the field that caused the validation error",
-                            "items": {
-                              "type": "string"
-                            },
-                            "example": [
-                              "name"
-                            ]
-                          },
-                          "type": {
-                            "type": "string",
-                            "description": "Type of the validation error",
-                            "example": "any.required"
-                          },
-                          "context": {
-                            "type": "object",
-                            "description": "Additional context provided by Joi",
-                            "properties": {
-                              "label": {
-                                "type": "string",
-                                "example": "name"
-                              },
-                              "key": {
-                                "type": "string",
-                                "example": "name"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "401": {
         "description": "Unauthorized error",
         "content": {
@@ -1177,7 +1135,44 @@
           }
         }
       },
-      "400-2": {
+      "500": {
+        "description": "Something went wrong",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Something went wrong"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400-bad-request": {
         "description": "Bad Request",
         "content": {
           "application/json": {
@@ -1258,44 +1253,7 @@
           }
         }
       },
-      "404-2": {
-        "description": "User not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 404
-                },
-                "message": {
-                  "type": "string",
-                  "example": "User not found"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "401-2": {
+      "401-unauthorized": {
         "description": "Unauthorized error",
         "content": {
           "application/json": {
@@ -1324,6 +1282,43 @@
                     "message": {
                       "type": "string",
                       "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404-not-found": {
+        "description": "User not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "User not found"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
                     }
                   }
                 }
