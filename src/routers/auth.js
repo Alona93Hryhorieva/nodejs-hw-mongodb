@@ -1,4 +1,6 @@
-import { Router } from 'express';
+// import { Router } from 'express';
+import pkg from 'express';
+const { Router } = pkg;
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import * as authControllers from '../controllers/auth.js';
 import validateBody from '../utils/validateBody.js';
@@ -41,12 +43,12 @@ authRouter.post(
 );
 
 authRouter.get(
-  '/get-oauth-url',
+  '/google-oauth-url',
   ctrlWrapper(authControllers.getGoogleOAuthUrlController),
 );
 
 authRouter.post(
-  '/confirm-oauth',
+  '/confirm-google',
   validateBody(loginWithGoogleOAuthSchema),
   ctrlWrapper(authControllers.loginWithGoogleController),
 );

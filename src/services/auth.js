@@ -20,11 +20,12 @@ import { TEMPLATES_DIR } from '../constants/index.js';
 
 import { verifyToken } from '../utils/jwt.js';
 
+// import { validateCode } from '../utils/googleOAuth2.js';
+
 import {
   getFullNameFromGoogleTokenPayload,
   validateCode,
 } from '../utils/googleOAuth2.js';
-
 
 const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');
 
@@ -208,28 +209,6 @@ export const requestResetToken = async (email) => {
   });
 };
 
-// export const resetPassword = async (payload) => {
-//   const entries = verifyToken(payload.token);
-
-//   // entries = jwt.verify(payload.token, env('JWT_SECRET'));
-
-//   const user = await UserCollection.findOne({
-//     email: entries.data.email,
-//   });
-
-//   if (!user) {
-//     throw createHttpError(404, 'User not found');
-//   }
-
-//   const encryptedPassword = await bcrypt.hash(payload.password, 10);
-
-//   await UserCollection.updateOne(
-//     { _id: user._id },
-//     { password: encryptedPassword },
-//   );
-
-//   await SessionCollection.deleteOne({ userId: user._id });
-// };
 export const resetPassword = async (payload) => {
   // Перевірка токена і отримання даних користувача
   // const entries = verifyToken(payload.token);
@@ -265,22 +244,29 @@ export const resetPassword = async (payload) => {
 export const loginOrSignupWithGoogle = async (code) => {
   const loginTicket = await validateCode(code);
   const payload = loginTicket.getPayload();
+
   if (!payload) throw createHttpError(401);
 
-  let user = await UsersCollection.findOne({ email: payload.email });
+  let user = await UserCollection.findOne({ email: payload.email });
+
   if (!user) {
-    const password = await bcrypt.hash(randomBytes(10), 10);
-    user = await UsersCollection.create({
+    const password = randomBytes(10);
+    const hashPassword = await bcrypt.hash(password, 10);
+    user = await UserCollection.create({
       email: payload.email,
+      // username: payload.name,
       name: getFullNameFromGoogleTokenPayload(payload),
-      password,
+      password: hashPassword,
+      //   verify: true,
       role: 'parent',
     });
+
+    delete user._doc.password;
   }
 
   const newSession = createSession();
 
-  return await SessionsCollection.create({
+  return await SessionCollection.create({
     userId: user._id,
     ...newSession,
   });

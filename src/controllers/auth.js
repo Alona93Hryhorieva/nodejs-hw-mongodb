@@ -1,11 +1,7 @@
 import * as authServices from '../services/auth.js';
-
-// import { requestResetToken } from '../services/auth.js';
-// import { resetPassword } from '../services/auth.js';
-import { validateBody } from '../utils/validateBody.js';
+import { generateGoogleOAuthUrl } from '../utils/googleOAuth2.js';
+// import { validateBody } from '../utils/validateBody.js';
 import { verifyToken } from '../utils/jwt.js';
-
-import { generateAuthUrl } from '../utils/googleOAuth2.js';
 import { loginOrSignupWithGoogle } from '../services/auth.js';
 
 const setupSession = (res, session) => {
@@ -89,16 +85,6 @@ export const logoutController = async (req, res) => {
   res.status(204).send();
 };
 
-// export const sendResetEmailController = async (req, res, next) => {
-//   // Викликаємо функцію для генерації токена та надсилання листа
-//   await authServices.requestResetToken(req.body.email);
-//   // Відповідь у разі успіху
-//   res.status(200).json({
-//     status: 200,
-//     message: 'Reset password email has been successfully sent.',
-//     data: {},
-//   });
-// };
 export const sendResetEmailController = async (req, res, next) => {
   const { email } = req.body; // Деструктуризація
 
@@ -123,14 +109,6 @@ export const sendResetEmailController = async (req, res, next) => {
   }
 };
 
-// export const resetPasswordController = async (req, res) => {
-//   await authServices.resetPassword(req.body);
-//   res.json({
-//     message: 'Password was successfully reset!',
-//     status: 200,
-//     data: {},
-//   });
-// };
 export const resetPasswordController = async (req, res) => {
   // Отримуємо токен з заголовка авторизації
   const token = req.headers.authorization?.split(' ')[1]; // Додано "?." для обробки випадків, коли заголовок може бути відсутнім
@@ -171,7 +149,8 @@ export const resetPasswordController = async (req, res) => {
 };
 
 export const getGoogleOAuthUrlController = async (req, res) => {
-  const url = generateAuthUrl();
+  const url = generateGoogleOAuthUrl();
+  // const url = 'http://';
   res.json({
     status: 200,
     message: 'Successfully get Google OAuth url!',
@@ -182,6 +161,7 @@ export const getGoogleOAuthUrlController = async (req, res) => {
 };
 
 export const loginWithGoogleController = async (req, res) => {
+  console.log(req.body.code);
   const session = await loginOrSignupWithGoogle(req.body.code);
   setupSession(res, session);
 

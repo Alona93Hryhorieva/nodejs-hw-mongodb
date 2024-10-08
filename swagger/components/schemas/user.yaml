@@ -1,0 +1,32 @@
+type: object
+required:
+  - name
+  - email
+  - password
+properties:
+  _id:
+    type: string
+    description: Unique identifier for the user
+    example: '670114be4f51e3aee1dc33b4'
+  name:
+    type: string
+    description: Name of the user
+    example: '7d5ef4004@smtp-brevo.com'
+  email:
+    type: string
+    description: Email address of the user
+    example: 'kapitochka127@ukr.net'
+  password:
+    type: string
+    description: Hashed password of the user
+    example: '$2b$10$9VzDeq53xt1zoh6B7H6W.OkOkunOkEiMFchqC16rob7k.2PsuoxmK'
+  createdAt:
+    type: string
+    format: date-time
+    description: Timestamp when the user was created
+    example: '2024-08-05T10:37:43.870Z'
+  updatedAt:
+    type: string
+    format: date-time
+    description: Timestamp when the user was last updated
+    example: '2024-08-05T10:37:43.870Z'
