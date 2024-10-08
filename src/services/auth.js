@@ -20,7 +20,12 @@ import { TEMPLATES_DIR } from '../constants/index.js';
 
 import { verifyToken } from '../utils/jwt.js';
 
-import { validateCode } from '../utils/googleOAuth2.js';
+// import { validateCode } from '../utils/googleOAuth2.js';
+
+import {
+  getFullNameFromGoogleTokenPayload,
+  validateCode,
+} from '../utils/googleOAuth2.js';
 
 const verifyEmailTemplatePath = path.join(TEMPLATES_DIR, 'verify-email.html');
 
@@ -204,28 +209,6 @@ export const requestResetToken = async (email) => {
   });
 };
 
-// export const resetPassword = async (payload) => {
-//   const entries = verifyToken(payload.token);
-
-//   // entries = jwt.verify(payload.token, env('JWT_SECRET'));
-
-//   const user = await UserCollection.findOne({
-//     email: entries.data.email,
-//   });
-
-//   if (!user) {
-//     throw createHttpError(404, 'User not found');
-//   }
-
-//   const encryptedPassword = await bcrypt.hash(payload.password, 10);
-
-//   await UserCollection.updateOne(
-//     { _id: user._id },
-//     { password: encryptedPassword },
-//   );
-
-//   await SessionCollection.deleteOne({ userId: user._id });
-// };
 export const resetPassword = async (payload) => {
   // Перевірка токена і отримання даних користувача
   // const entries = verifyToken(payload.token);
@@ -264,7 +247,7 @@ export const loginOrSignupWithGoogle = async (code) => {
 
   if (!payload) throw createHttpError(401);
 
-  let user = await UserCollectionCollection.findOne({ email: payload.email });
+  let user = await UserCollection.findOne({ email: payload.email });
 
   if (!user) {
     const password = randomBytes(10);

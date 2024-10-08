@@ -1,4 +1,6 @@
-import { Router } from 'express';
+// import { Router } from 'express';
+import pkg from 'express';
+const { Router } = pkg;
 import * as contactControllers from '../controllers/contacts.js';
 import authenticate from '../middlewares/authenticate.js';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
