@@ -18,6 +18,7 @@ requestBody:
     multipart/form-data:
       schema:
         type: object
+        required: [] # Залишаємо пустим, щоб жодне поле не було обов'язковим
         properties:
           name:
             description: "Contact's name"
@@ -35,7 +36,7 @@ requestBody:
             example: test@gmail.com
           isFavourite:
             type: boolean
-            description: Whether the contact if favourite
+            description: Whether the contact is favourite
             default: false
           contactType:
             type: string

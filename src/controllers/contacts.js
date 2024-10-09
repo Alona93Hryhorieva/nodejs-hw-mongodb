@@ -64,6 +64,11 @@ export const addContactController = async (req, res) => {
       photo = await saveFileToUploadDir(req.file);
     }
   }
+  // const { isFavourite } = req.body;
+
+  // if (isFavourite === '' || isFavourite === null) {
+  //   req.body.isFavourite = false; // або встановити значення за замовчуванням
+  // }
 
   const { _id: userId } = req.user;
   const data = await contactServices.createContact({
@@ -98,30 +103,76 @@ export const upsertContactController = async (req, res) => {
   });
 };
 
+// export const patchContactController = async (req, res) => {
+//   let photo;
+//   // Обробка файлу, якщо він був завантажений
+//   if (req.file) {
+//     if (enableCloudinary === 'true') {
+//       photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
+//     } else {
+//       photo = await saveFileToUploadDir(req.file);
+//     }
+//   }
+
+//   const { contactId } = req.params;
+//   const { _id: userId } = req.user;
+
+//   const updatedData = {
+//     ...req.body,
+//     ...(req.file && { photo: req.file.path }), // Додаємо шлях до завантаженого фото, якщо воно є
+//   };
+
+//   const result = await contactServices.updateContact(
+//     { _id: contactId, userId },
+//     req.body,
+//     { new: true },
+//   );
+
+//   if (!result) {
+//     throw createHttpError(404, `Contact ${contactId} not found`);
+//   }
+
+//   res.json({
+//     status: 200,
+//     message: 'Contact patched successfully',
+//     // data: result.data,ЦЕ ПЕРШЕ БУЛО
+//     data: result, // Повертаємо сам оновлений документ
+//   });
+// };
 export const patchContactController = async (req, res) => {
   let photo;
+
+  // Обробка файлу, якщо він був завантажений
   if (req.file) {
-    if (enableCloudinary === 'true') {
-      photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
-    } else {
-      photo = await saveFileToUploadDir(req.file);
-    }
+    photo =
+      enableCloudinary === 'true'
+        ? await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb')
+        : await saveFileToUploadDir(req.file);
   }
 
   const { contactId } = req.params;
   const { _id: userId } = req.user;
 
-  const updatedData = {
-    ...req.body,
-    ...(req.file && { photo: req.file.path }), // Додаємо шлях до завантаженого фото, якщо воно є
-  };
+  // Формуємо дані для оновлення
+  const updatedData = {};
 
+  // Додаємо лише ті поля, які були надіслані в тілі запиту
+  if (req.body.name) updatedData.name = req.body.name;
+  if (req.body.phoneNumber) updatedData.phoneNumber = req.body.phoneNumber;
+  if (req.body.email) updatedData.email = req.body.email;
+  if (req.body.isFavourite !== undefined)
+    updatedData.isFavourite = req.body.isFavourite;
+  if (req.body.contactType) updatedData.contactType = req.body.contactType;
+  if (photo) updatedData.photo = photo; // Додаємо шлях до фото, якщо воно є
+
+  // Виклик сервісу для оновлення контакту
   const result = await contactServices.updateContact(
     { _id: contactId, userId },
-    req.body,
+    updatedData, // Передаємо updatedData
     { new: true },
   );
 
+  // Перевірка на наявність контакту
   if (!result) {
     throw createHttpError(404, `Contact ${contactId} not found`);
   }
@@ -129,8 +180,7 @@ export const patchContactController = async (req, res) => {
   res.json({
     status: 200,
     message: 'Contact patched successfully',
-    // data: result.data,ЦЕ ПЕРШЕ БУЛО
-    data: result, // Повертаємо сам оновлений документ
+    data: result, // Повертаємо оновлений документ
   });
 };
 
