@@ -103,42 +103,6 @@ export const upsertContactController = async (req, res) => {
   });
 };
 
-// export const patchContactController = async (req, res) => {
-//   let photo;
-//   // Обробка файлу, якщо він був завантажений
-//   if (req.file) {
-//     if (enableCloudinary === 'true') {
-//       photo = await saveFileToCloudinary(req.file, 'nodejs-hw-mongodb');
-//     } else {
-//       photo = await saveFileToUploadDir(req.file);
-//     }
-//   }
-
-//   const { contactId } = req.params;
-//   const { _id: userId } = req.user;
-
-//   const updatedData = {
-//     ...req.body,
-//     ...(req.file && { photo: req.file.path }), // Додаємо шлях до завантаженого фото, якщо воно є
-//   };
-
-//   const result = await contactServices.updateContact(
-//     { _id: contactId, userId },
-//     req.body,
-//     { new: true },
-//   );
-
-//   if (!result) {
-//     throw createHttpError(404, `Contact ${contactId} not found`);
-//   }
-
-//   res.json({
-//     status: 200,
-//     message: 'Contact patched successfully',
-//     // data: result.data,ЦЕ ПЕРШЕ БУЛО
-//     data: result, // Повертаємо сам оновлений документ
-//   });
-// };
 export const patchContactController = async (req, res) => {
   let photo;
 

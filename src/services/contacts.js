@@ -62,18 +62,15 @@ export const createContact = (payload) => {
 };
 
 export const updateContact = async (filter, data, options = {}) => {
-  const rawResult = await ContactCollection.findOneAndUpdate(filter, data, {
-    includeResultMetadata: true,
+  const result = await ContactCollection.findOneAndUpdate(filter, data, {
+    new: true, // Повертає оновлений документ
     ...options,
   });
 
-  if (!rawResult || !rawResult.value) return null;
+  // Перевіряємо наявність результату і повертаємо його
+  if (!result) return null;
 
-  return {
-    data: rawResult.value,
-    isNew: Boolean(rawResult.lastErrorObject?.upserted),
-  };
+  return result; // Повертаємо оновлений контакт без додаткових полів
 };
-
 export const deleteContact = (filter) =>
   ContactCollection.findOneAndDelete(filter);
